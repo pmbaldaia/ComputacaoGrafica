@@ -114,10 +114,8 @@ function draw() {
     if (keyCode == RIGHT_ARROW || keyCode == LEFT_ARROW) {
       ship.setRotation(0);
     } else if (keyCode == UP_ARROW) {
-      ship.boosting = true;
-    } else if (keyCode == DOWN_ARROW) {
       ship.boosting = false;
-    }
+    } 
   }
 
   function keyPressed() {
@@ -128,10 +126,8 @@ function draw() {
     } else if (keyCode == LEFT_ARROW) {
       ship.setRotation(-0.1);
     } else if (keyCode == UP_ARROW) {
-      ship.boosting = false;
-    } else if (keyCode == DOWN_ARROW){
       ship.boosting = true;
-    } else if (keyCode == ENTER && message == "Perdeu") {
+    }  else if (keyCode == ENTER && message == "Perdeu") {
       console.log("Eish!!");
       restart("Jogar novamente!", initastnum);
     }
