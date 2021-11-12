@@ -28,14 +28,14 @@ class Ball {
     if (this.y > H + this.R*2){
         this.y = this.y - (H + this.R*2)
     } 
-    if (this.y <= this.R*2){
+    if (this.y < -this.R*2){
         this.y = this.y + (H + this.R*2)
     }
     this.x += this.dX; // update horizontal position
     if (this.x > W + this.R*2){
         this.x = this.x - (W + this.R*2)
     }
-    if (this.x < this.R*2){
+    if (this.x < -this.R*2){
         this.x = this.x + (W + this.R*2)
     }    
         
@@ -50,15 +50,16 @@ for (let i = 0; i < 5; i++) {
     let color = `rgb(${R},${G},${B})`; // randomcolor
     // randomposition (inside Canvas)
     let xInit = 20 + Math.random() * (W - 2 * 20);
+    let yInit = 20 + Math.random() * (W - 2 * 20);
     
     // randomdirection
-    let direction = Math.random() * 1 * Math.PI;
+    let direction = Math.random() * 2 * Math.PI;
     //random size
-    let rayo = 5 + Math.random() * (10 - 1 * 2);
+    let rayo = 5 + Math.random() * (5);
     //random velocity
-    let velocity = 0.2 + Math.random() * (W/100 - 0.4 * 0.4);
+    let velocity = 0.2 + Math.random() * (0.4);
 
-    b.push(new Ball(xInit, -rayo, rayo, direction, color, velocity))
+    b.push(new Ball(xInit, yInit, rayo, direction, color, velocity))
 }
 
 function render() {
