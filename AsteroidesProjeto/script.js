@@ -25,13 +25,19 @@ class Ball {
 
     update() {
     this.y += this.dY; // update vertical position
-    if (this.y >= H + this.R){
-        this.y = this.R
+    if (this.y > H + this.R*2){
+        this.y = this.y - (H + this.R*2)
+    } 
+    if (this.y <= this.R*2){
+        this.y = this.y + (H + this.R*2)
     }
     this.x += this.dX; // update horizontal position
-    if (this.x >= W + this.R){
-        this.x = this.R
+    if (this.x > W + this.R*2){
+        this.x = this.x - (W + this.R*2)
     }
+    if (this.x < this.R*2){
+        this.x = this.x + (W + this.R*2)
+    }    
         
     }
 }
