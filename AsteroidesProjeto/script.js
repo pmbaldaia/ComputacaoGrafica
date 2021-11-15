@@ -76,10 +76,10 @@ class Ship{
         ctx.strokeStyle = this.c;
         ctx.beginPath();
         ctx.moveTo(this.x,this.y);
-        ctx.lineTo(this.x - 10, this.y - 10);
-        ctx.lineTo(this.x,this.y + 20)
-        ctx.lineTo(this.x + 10, this.y - 10)
-        ctx.lineTo(this.x, this.y)
+        ctx.lineTo(this.x + 10, this.y + 10);
+        ctx.lineTo(this.x,this.y - 20);
+        ctx.lineTo(this.x - 10, this.y + 10);
+        ctx.lineTo(this.x, this.y);
         ctx.stroke();
     }
 
@@ -87,7 +87,7 @@ class Ship{
         //this.y += this.dY; // update vertical position
         if (this.y > H + this.r){
             this.y = this.y - (H + this.r)
-        } 
+        }
         if (this.y < -this.r){
             this.y = this.y + (H + this.r)
         }
@@ -97,13 +97,13 @@ class Ship{
         }
         if (this.x < -this.r){
             this.x = this.x + (W + this.r)
-        }
+        } 
     }
 }
 
 
-
-let b = new Array(); // setup as many balls as wanted
+// setup as many balls as wanted
+let b = new Array(); 
 for (let i = 0; i < 5; i++) {
 
     let color = `rgb(255,255,255)`; // randomcolor
@@ -121,20 +121,21 @@ for (let i = 0; i < 5; i++) {
     b.push(new Ball(xInit, yInit, rayo, direction, color, velocity))
 }
 
-
-let s = new Array();//setup the ship
-let xCenter = W/2;
+//setup the ship
+let s = new Array();
+{let xCenter = W/2;
 let yCenter = H/2; 
 let color = `rgb(255,255,255)`; // randomcolor
 let rayon = 5;
 
 s.push(new Ship(xCenter, yCenter, color, rayon))
+}
 
 
 
 
-console.log(s);
-console.log(b);
+
+
 function render() {
     // fade Canvas
     ctx.fillStyle = "rgba(19,19,19,0.75)"
