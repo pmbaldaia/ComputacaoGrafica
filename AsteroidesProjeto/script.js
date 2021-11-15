@@ -1,7 +1,10 @@
 const canvas = document.querySelector('#myCanvas');
 const ctx = canvas.getContext("2d");
 
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 const W = canvas.width, H = canvas.height;
+
 
 
 class Ball { 
@@ -19,7 +22,25 @@ class Ball {
     draw() {
     ctx.strokeStyle = this.c;
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.R, 0, 2 * Math.PI);
+    ctx.moveTo(this.x, this.y)
+    ctx.lineTo(this.x - 20, this.y + 10)
+    ctx.lineTo(this.x - 20, this.y + 15)
+    ctx.lineTo(this.x - 25, this.y + 25)
+    ctx.lineTo(this.x - 25, this.y + 30)
+    ctx.lineTo(this.x - 10, this.y + 35)
+    ctx.lineTo(this.x - 20, this.y + 40)
+    ctx.lineTo(this.x - 15, this.y + 45)
+    ctx.lineTo(this.x - 10, this.y + 50)
+    ctx.lineTo(this.x, this.y + 50)
+    ctx.lineTo(this.x + 5, this.y + 45)
+    ctx.lineTo(this.x + 10, this.y + 50)
+    ctx.lineTo(this.x + 25, this.y + 30)
+    ctx.lineTo(this.x + 20, this.y + 25)
+    ctx.lineTo(this.x + 25, this.y + 20)
+    ctx.lineTo(this.x + 20, this.y + 10)
+    ctx.lineTo(this.x + 10, this.y + 5)
+    ctx.lineTo(this.x, this.y + 5)
+    ctx.lineTo(this.x, this.y)
     ctx.stroke();
     }
 
@@ -55,21 +76,22 @@ class Ship{
         ctx.strokeStyle = this.c;
         ctx.beginPath();
         ctx.moveTo(this.x,this.y);
-        ctx.lineTo(this.x - 2, this.y - 2);
-        ctx.lineTo(this.x,this.y + 3)
-        ctx.lineTo(this.x + 2, this.y - 2)
+        ctx.lineTo(this.x - 10, this.y - 10);
+        ctx.lineTo(this.x,this.y + 20)
+        ctx.lineTo(this.x + 10, this.y - 10)
+        ctx.lineTo(this.x, this.y)
         ctx.stroke();
     }
 
     update() {
-        this.y += this.dY; // update vertical position
+        //this.y += this.dY; // update vertical position
         if (this.y > H + this.r){
             this.y = this.y - (H + this.r)
         } 
         if (this.y < -this.r){
             this.y = this.y + (H + this.r)
         }
-        this.x += this.dX; // update horizontal position
+       // this.x += this.dX; // update horizontal position
         if (this.x > W + this.r){
             this.x = this.x - (W + this.r)
         }
@@ -92,16 +114,17 @@ for (let i = 0; i < 5; i++) {
     // randomdirection
     let direction = Math.random() * 2 * Math.PI;
     //random size
-    let rayo = 5 + Math.random() * (5);
+    let rayo = 30;
     //random velocity
-    let velocity = 0.2 + Math.random() * (0.4);
+    let velocity = 2 + Math.random() * (4);
 
     b.push(new Ball(xInit, yInit, rayo, direction, color, velocity))
 }
 
+
 let s = new Array();//setup the ship
-let xCenter = 150;
-let yCenter = 75; 
+let xCenter = W/2;
+let yCenter = H/2; 
 let color = `rgb(255,255,255)`; // randomcolor
 let rayon = 5;
 
