@@ -4,11 +4,10 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const W = canvas.width, H = canvas.height;
+let angle = 0 
 
-
-
-class Ball { 
-    constructor(x, y, r, d, c, v) { // CONSTRUCTOR
+class Asteroid { 
+    constructor(x, y, r, d, c, v, angle) { // CONSTRUCTOR
         this.x = x; // initial X position
         this.y = y; // initial Y position
         // (constant) horizontal displacement(velocity): d is a direction angle
@@ -21,45 +20,47 @@ class Ball {
 
     draw() {
     ctx.strokeStyle = this.c;
+
+    ctx.save()
+    ctx.translate(this.x,this.y)
+    ctx.rotate(angle * Math.PI / 360)
     ctx.beginPath();
-    ctx.moveTo(this.x, this.y)
-    ctx.lineTo(this.x - 20, this.y + 10)
-    ctx.lineTo(this.x - 20, this.y + 15)
-    ctx.lineTo(this.x - 25, this.y + 25)
-    ctx.lineTo(this.x - 25, this.y + 30)
-    ctx.lineTo(this.x - 10, this.y + 35)
-    ctx.lineTo(this.x - 20, this.y + 40)
-    ctx.lineTo(this.x - 15, this.y + 45)
-    ctx.lineTo(this.x - 10, this.y + 50)
-    ctx.lineTo(this.x, this.y + 50)
-    ctx.lineTo(this.x + 5, this.y + 45)
-    ctx.lineTo(this.x + 10, this.y + 50)
-    ctx.lineTo(this.x + 25, this.y + 30)
-    ctx.lineTo(this.x + 20, this.y + 25)
-    ctx.lineTo(this.x + 25, this.y + 20)
-    ctx.lineTo(this.x + 20, this.y + 10)
-    ctx.lineTo(this.x + 10, this.y + 5)
-    ctx.lineTo(this.x, this.y + 5)
-    ctx.lineTo(this.x, this.y)
+    ctx.lineTo(-5,-40)
+    ctx.lineTo(-30,-30)
+    ctx.lineTo(-30,-25)
+    ctx.lineTo(-45,0)
+    ctx.lineTo(-25,10)
+    ctx.lineTo(-40,20)
+    ctx.lineTo(-30,35)
+    ctx.lineTo(-5,35)
+    ctx.lineTo(5,25)
+    ctx.lineTo(15,40)
+    ctx.lineTo(35,5)
+    ctx.lineTo(30,-5)
+    ctx.lineTo(40,-15)
+    ctx.lineTo(35,-35)
+    ctx.lineTo(-5,-40)
     ctx.stroke();
+    ctx.restore()
+
+    
     }
 
     update() {
     this.y += this.dY; // update vertical position
-    if (this.y > H + this.R*2){
+    if (this.y > H - (this.y+50/2) + this.R*2){
         this.y = this.y - (H + this.R*2)
-    } 
-    if (this.y < -this.R*2){
+    }
+    if (this.y < -(this.y+50/2) - this.R*2){
         this.y = this.y + (H + this.R*2)
     }
     this.x += this.dX; // update horizontal position
-    if (this.x > W + this.R*2){
+    if (this.x > W - (this.x+(-20+25)/2) + this.R*2){
         this.x = this.x - (W + this.R*2)
     }
-    if (this.x < -this.R*2){
+    if (this.x < - (this.x+(-20+25)/2) -this.R*2){
         this.x = this.x + (W + this.R*2)
     }    
-        
     }
 }
 
@@ -68,7 +69,8 @@ class Ship{
         this.x = x; // initial X position
         this.y = y; // initial Y position
         this.c = c; // color
-        this.r = r; 
+        this.r = r; //collision
+        
     }
 
     draw(){
@@ -84,6 +86,7 @@ class Ship{
         ctx.lineTo(this.x, this.y);
         ctx.stroke();
         ctx.restore();
+
     }
 
     update() {
@@ -106,7 +109,7 @@ class Ship{
 
 
 // setup asteroids
-let b = new Array(); 
+let asteroids = new Array(); 
 for (let i = 0; i < 5; i++) {
 
     let color = `rgb(255,255,255)`; // randomcolor
@@ -121,7 +124,7 @@ for (let i = 0; i < 5; i++) {
     //random velocity
     let velocity = 1 + Math.random() * (1);
 
-    b.push(new Ball(xInit, yInit, rayo, direction, color, velocity))
+    asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity))
 }
 
 //setup the ship
@@ -144,15 +147,16 @@ function render() {
     ctx.fillStyle = "rgba(19,19,19,0.75)"
     ctx.fillRect(0, 0, W, H);
     // draw & update
-    b.forEach( ball => {
-    ball.draw();
-    ball.update();
+    asteroids.forEach( asteroid => {
+    asteroid.draw();
+    asteroid.update();
     });
     s.forEach( ship => {
     ship.draw();
     ship.update();
     });
     ;
+    angle++;
     //new frame
     window.requestAnimationFrame(render);
     }
