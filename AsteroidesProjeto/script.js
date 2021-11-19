@@ -74,6 +74,8 @@ class Ship{
     draw(){
         //draw ship
         ctx.strokeStyle = this.c;
+        ctx.save()
+        ctx.translate(W/2,H/2)
         ctx.beginPath();
         ctx.moveTo(this.x,this.y);
         ctx.lineTo(this.x + 10, this.y + 10);
@@ -81,17 +83,18 @@ class Ship{
         ctx.lineTo(this.x - 10, this.y + 10);
         ctx.lineTo(this.x, this.y);
         ctx.stroke();
+        ctx.restore();
     }
 
     update() {
-        //this.y += this.dY; // update vertical position
+        // update vertical position
         if (this.y > H + this.r){
             this.y = this.y - (H + this.r)
         }
         if (this.y < -this.r){
             this.y = this.y + (H + this.r)
         }
-       // this.x += this.dX; // update horizontal position
+       // update horizontal position
         if (this.x > W + this.r){
             this.x = this.x - (W + this.r)
         }
@@ -102,29 +105,29 @@ class Ship{
 }
 
 
-// setup as many balls as wanted
+// setup asteroids
 let b = new Array(); 
 for (let i = 0; i < 5; i++) {
 
     let color = `rgb(255,255,255)`; // randomcolor
     // randomposition (inside Canvas)
     let xInit = 20 + Math.random() * (W - 2 * 20);
-    let yInit = 20 + Math.random() * (W - 2 * 20);
+    let yInit = 20 + Math.random() * (H - 2 * 20);
     
     // randomdirection
     let direction = Math.random() * 2 * Math.PI;
     //random size
     let rayo = 30;
     //random velocity
-    let velocity = 2 + Math.random() * (4);
+    let velocity = 1 + Math.random() * (1);
 
     b.push(new Ball(xInit, yInit, rayo, direction, color, velocity))
 }
 
 //setup the ship
 let s = new Array();
-{let xCenter = W/2;
-let yCenter = H/2; 
+{let xCenter = 0;
+let yCenter = 0; 
 let color = `rgb(255,255,255)`; // randomcolor
 let rayon = 5;
 
