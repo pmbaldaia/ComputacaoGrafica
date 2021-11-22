@@ -1,3 +1,5 @@
+import Ship from './ship.js';
+
 const canvas = document.querySelector('#myCanvas');
 const ctx = canvas.getContext("2d");
 
@@ -20,8 +22,7 @@ class Asteroid {
 
     draw() {
     ctx.strokeStyle = this.c;
-
-    ctx.save()
+    ctx.save();
     ctx.translate(this.x,this.y)
     ctx.rotate(angle * Math.PI / 360)
     ctx.beginPath();
@@ -42,70 +43,27 @@ class Asteroid {
     ctx.lineTo(-5,-40)
     ctx.stroke();
     ctx.restore()
-
-    
     }
 
     update() {
-    this.y += this.dY; // update vertical position
-    if (this.y > H - (this.y+50/2) + this.R*2){
-        this.y = this.y - (H + this.R*2)
-    }
-    if (this.y < -(this.y+50/2) - this.R*2){
-        this.y = this.y + (H + this.R*2)
-    }
-    this.x += this.dX; // update horizontal position
-    if (this.x > W - (this.x+(-20+25)/2) + this.R*2){
-        this.x = this.x - (W + this.R*2)
-    }
-    if (this.x < - (this.x+(-20+25)/2) -this.R*2){
-        this.x = this.x + (W + this.R*2)
-    }    
+        this.y += this.dY; // update vertical position
+        if (this.y > H - (this.y+50/2) + this.R*2){
+            this.y = this.y - (H + this.R*2)
+        }
+        if (this.y < -(this.y+50/2) - this.R*2){
+            this.y = this.y + (H + this.R*2)
+        }
+        this.x += this.dX; // update horizontal position
+        if (this.x > W - (this.x+(-20+25)/2) + this.R*2){
+            this.x = this.x - (W + this.R*2)
+        }
+        if (this.x < - (this.x+(-20+25)/2) -this.R*2){
+            this.x = this.x + (W + this.R*2)
+        }    
     }
 }
 
-class Ship{
-    constructor(x,y,c,r){
-        this.x = x; // initial X position
-        this.y = y; // initial Y position
-        this.c = c; // color
-        this.r = r; //collision
-        
-    }
 
-    draw(){
-        //draw ship
-        ctx.strokeStyle = this.c;
-        ctx.save()
-        ctx.translate(W/2,H/2)
-        ctx.beginPath();
-        ctx.moveTo(this.x,this.y);
-        ctx.lineTo(this.x + 10, this.y + 10);
-        ctx.lineTo(this.x,this.y - 20);
-        ctx.lineTo(this.x - 10, this.y + 10);
-        ctx.lineTo(this.x, this.y);
-        ctx.stroke();
-        ctx.restore();
-
-    }
-
-    update() {
-        // update vertical position
-        if (this.y > H + this.r){
-            this.y = this.y - (H + this.r)
-        }
-        if (this.y < -this.r){
-            this.y = this.y + (H + this.r)
-        }
-       // update horizontal position
-        if (this.x > W + this.r){
-            this.x = this.x - (W + this.r)
-        }
-        if (this.x < -this.r){
-            this.x = this.x + (W + this.r)
-        } 
-    }
-}
 
 
 // setup asteroids
@@ -116,7 +74,6 @@ for (let i = 0; i < 5; i++) {
     // randomposition (inside Canvas)
     let xInit = 20 + Math.random() * (W - 2 * 20);
     let yInit = 20 + Math.random() * (H - 2 * 20);
-    
     // randomdirection
     let direction = Math.random() * 2 * Math.PI;
     //random size
@@ -128,14 +85,8 @@ for (let i = 0; i < 5; i++) {
 }
 
 //setup the ship
-let s = new Array();
-{let xCenter = 0;
-let yCenter = 0; 
-let color = `rgb(255,255,255)`; // randomcolor
-let rayon = 5;
+let ship = new Ship(W/2, H/2, `rgb(255,255,255)`, 10, ctx,W,H)
 
-s.push(new Ship(xCenter, yCenter, color, rayon))
-}
 
 
 
@@ -151,13 +102,63 @@ function render() {
     asteroid.draw();
     asteroid.update();
     });
-    s.forEach( ship => {
     ship.draw();
     ship.update();
-    });
-    ;
+
+    //desenhar balas do player
+    ship.drawBullets();
+
+    if (ship.move == 1){
+        ship.turnRight();
+    } else if (ship.move == -1){
+        ship.turnLeft();
+    }
+
+    if (ship.speed == 1){
+        ship.goForth();
+    } else if (ship.speed == -1){
+        ship.goBack();
+
+    }
+
+    //atualizar balas do player
+    ship.updateBullets();
+
     angle++;
     //new frame
     window.requestAnimationFrame(render);
     }
     render(); //startthe animation
+
+
+    /*******************************************
+     * CONTROL PLAYER USING KEYS
+    *********************************************/
+     window.addEventListener('keydown', (e)=>{
+        e.preventDefault();
+        if (e.key == 'ArrowRight'){ /*seta para direita*/
+          ship.move = 1;}
+        if (e.key == 'ArrowLeft'){ /*seta para direita*/
+          ship.move = -1;}
+        if (e.key == 'ArrowUp'){ /*seta para direita*/
+          ship.speed = 1;}  
+        if (e.key == 'ArrowDown'){ /*seta para direita*/
+          ship.speed = -1;}
+        if (e.keyCode == 32){ /*space bar*/
+          ship.createBullet();}
+      }
+      );
+  
+  
+      window.addEventListener('keyup', (e) => {
+        e.preventDefault();
+        if (e.key == 'ArrowRight' && ship.move == 1) /*seta para direita*/
+          ship.move = 0;
+        if (e.key == 'ArrowLeft' && ship.move == -1)/*seta para esquerda*/
+          ship.move = 0;
+        if (e.key == 'ArrowUp' && ship.speed == 1) /*seta para direita*/
+          ship.speed = 0;
+        if (e.key == 'ArrowDown' && ship.speed == -1) /*seta para direita*/
+          ship.speed = 0;
+          
+      });
