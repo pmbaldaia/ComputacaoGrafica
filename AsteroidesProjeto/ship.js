@@ -29,11 +29,7 @@ export default class Ship{
         this.ctx.lineTo(-10, 10);
         this.ctx.lineTo(0, 0);
         this.ctx.lineTo(0,-20)
-        this.ctx.stroke();
-        
-        this.ctx.fillStyle = `rgb(255,255,255)`;
-        this.ctx.fillRect(-1,-21,2,2);
-        
+        this.ctx.stroke();        
         this.ctx.restore();
         
     }
