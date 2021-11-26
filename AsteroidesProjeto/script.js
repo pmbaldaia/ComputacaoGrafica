@@ -33,15 +33,14 @@ for (let i = 0; i < 5; i++) {
 let ship = new Ship(W/2, H/2, `rgb(255,255,255)`, 10, ctx,W,H)
 
 
-
+  
 
 
 
 
 function render() {
     // fade Canvas
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    
     ctx.fillStyle = "rgba(19,19,19,0.75)"
     ctx.fillRect(0, 0, W, H);
 
@@ -106,6 +105,14 @@ function render() {
     
     render(); //startthe animation
 
+    function score(){
+      ctx.fillStyle = "white";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'left';
+        ctx.font = 'bold 20px arial';
+        ctx.fillText("YOU LOST", 0, 0);
+    }
+
 
     function checkCollisionBullet(asteroid, bullet) {
       // verifica colisão entre 1 inimigo e 1 bala
@@ -156,16 +163,7 @@ function render() {
     }
 
 
-
-
-
-
-
-
-
-    /*******************************************
-     * CONTROL ship USING KEYS
-    *********************************************/
+    //CONTROL ship USING KEYS
      window.addEventListener('keydown', (e)=>{
         e.preventDefault();
         if (e.key == " "){ /*space bar*/
@@ -175,11 +173,11 @@ function render() {
         if (e.key == 'ArrowLeft'){ /*seta para direita*/
           ship.move = "L";}
         if (e.key == 'ArrowUp'){ /*seta para direita*/
-          ship.speed = "F";}  
+          ship.speed = "F";}
         if (e.key == 'ArrowDown'){ /*seta para direita*/
           ship.speed = "B";}
         }
-      );  
+      );
   
       window.addEventListener('keyup', (e) => {
         e.preventDefault();
