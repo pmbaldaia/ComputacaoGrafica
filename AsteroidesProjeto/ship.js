@@ -74,7 +74,6 @@ export default class Ship{
           directionY: 6*Math.cos(this.orientation * Math.PI / 180),
           directionX: 6*Math.sin(this.orientation * Math.PI / 180)
         });
-        console.log('space2');
       }
 
       drawBullets() {
@@ -84,7 +83,6 @@ export default class Ship{
           this.ctx.fillStyle = "white";
           this.ctx.fillRect(this.bullets[i].x, this.bullets[i].y, this.bullets[i].w, this.bullets[i].h);
         }
-        console.log('space3');
       }
 
     update() {

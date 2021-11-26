@@ -45,6 +45,8 @@ function render() {
     ctx.fillStyle = "rgba(19,19,19,0.75)"
     ctx.fillRect(0, 0, W, H);
 
+
+    score();
     //verifica colisões ANTES de desenhar
     checkCollisionsBullets();
     checkCollisionsShips();
@@ -83,8 +85,25 @@ function render() {
         ship.goBack();
     }
     //new frame
-    window.requestAnimationFrame(render);
+    
+    if(ship.state == 'alive' && asteroids.length > 0){
+    window.requestAnimationFrame(render);}
+    else if (asteroids.length == 0) {
+      ctx.fillStyle = "white";
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = 'bold 40px arial';
+      ctx.fillText("YOU WIN", W / 2, H / 2);
     }
+    else {
+      ctx.fillStyle = "white";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = 'bold 40px arial';
+        ctx.fillText("YOU LOST", W / 2, H / 2);
+    }
+    }
+    
     render(); //startthe animation
 
 
@@ -108,7 +127,7 @@ function render() {
             ship.bullets[j].state = "dead";
             //sinaliza futura remoção do inimigo
             asteroids[i].state = "dead";
-          }
+        }
       }
     }
 
@@ -150,8 +169,7 @@ function render() {
      window.addEventListener('keydown', (e)=>{
         e.preventDefault();
         if (e.key == " "){ /*space bar*/
-          ship.createBullet();
-          console.log('space1');}
+          ship.createBullet();}
         if (e.key == 'ArrowRight'){ /*seta para direita*/
           ship.move = "R";}
         if (e.key == 'ArrowLeft'){ /*seta para direita*/
