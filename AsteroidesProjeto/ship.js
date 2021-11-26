@@ -5,14 +5,17 @@ export default class Ship{
         this.c = c; // color
         this.r = r; //collision
         this.orientation = 0
-        this.move = 0
+        this.move = ''
         this.ctx = ctx;
-        this.speed = 0
+        this.speed = ''
         this.W = W
         this.H = H
         this.bullets = []
         this.bulletsOrientationX = 2
         this.bulletsOrientationY = 2
+        this.state = 'alive'
+        this.sizeX = 10
+        this.sizeY = 15
 
     }
 
@@ -62,14 +65,16 @@ export default class Ship{
 
     createBullet() {
         // acrescenta uma nova bala no array de balas, apartir da posição do player
+        
         this.bullets.push({
-          x: this.x,
-          y: this.y,
-          w: 2,
-          h: 2,
+          x: this.x + 20*Math.sin(this.orientation * Math.PI / 180),
+          y: this.y - 20*Math.cos(this.orientation * Math.PI / 180),
+          w: 4,
+          h: 4,
           directionY: 6*Math.cos(this.orientation * Math.PI / 180),
           directionX: 6*Math.sin(this.orientation * Math.PI / 180)
         });
+        console.log('space2');
       }
 
       drawBullets() {
@@ -79,6 +84,7 @@ export default class Ship{
           this.ctx.fillStyle = "white";
           this.ctx.fillRect(this.bullets[i].x, this.bullets[i].y, this.bullets[i].w, this.bullets[i].h);
         }
+        console.log('space3');
       }
 
     update() {

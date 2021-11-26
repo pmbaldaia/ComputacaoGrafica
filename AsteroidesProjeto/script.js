@@ -1,69 +1,12 @@
 import Ship from './ship.js';
+import Asteroid from './asteroid.js'
 
 const canvas = document.querySelector('#myCanvas');
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-const W = canvas.width, H = canvas.height;
-let angle = 0 
-
-class Asteroid { 
-    constructor(x, y, r, d, c, v, angle) { // CONSTRUCTOR
-        this.x = x; // initial X position
-        this.y = y; // initial Y position
-        // (constant) horizontal displacement(velocity): d is a direction angle
-        this.dX = v * Math.cos(d);
-        // (constant) vertical displacement (velocity): d is a direction angle
-        this.dY = v * Math.sin(d);
-        this.c = c; // color
-        this.R = r; // circle radius(constant)
-    }
-
-    draw() {
-    ctx.strokeStyle = this.c;
-    ctx.save();
-    ctx.translate(this.x,this.y)
-    ctx.rotate(angle * Math.PI / 360)
-    ctx.beginPath();
-    ctx.lineTo(-5,-40)
-    ctx.lineTo(-30,-30)
-    ctx.lineTo(-30,-25)
-    ctx.lineTo(-45,0)
-    ctx.lineTo(-25,10)
-    ctx.lineTo(-40,20)
-    ctx.lineTo(-30,35)
-    ctx.lineTo(-5,35)
-    ctx.lineTo(5,25)
-    ctx.lineTo(15,40)
-    ctx.lineTo(35,5)
-    ctx.lineTo(30,-5)
-    ctx.lineTo(40,-15)
-    ctx.lineTo(35,-35)
-    ctx.lineTo(-5,-40)
-    ctx.stroke();
-    ctx.restore()
-    }
-
-    update() {
-        this.y += this.dY; // update vertical position
-        if (this.y > H - (this.y+50/2) + this.R*2){
-            this.y = this.y - (H + this.R*2)
-        }
-        if (this.y < -(this.y+50/2) - this.R*2){
-            this.y = this.y + (H + this.R*2)
-        }
-        this.x += this.dX; // update horizontal position
-        if (this.x > W - (this.x+(-20+25)/2) + this.R*2){
-            this.x = this.x - (W + this.R*2)
-        }
-        if (this.x < - (this.x+(-20+25)/2) -this.R*2){
-            this.x = this.x + (W + this.R*2)
-        }    
-    }
-}
-
-
+const W = canvas.width, H = canvas.height; 
 
 
 // setup asteroids
@@ -77,11 +20,13 @@ for (let i = 0; i < 5; i++) {
     // randomdirection
     let direction = Math.random() * 2 * Math.PI;
     //random size
-    let rayo = 30;
+    let rayo = 40;
     //random velocity
     let velocity = 1 + Math.random() * (1);
+    //rotation 
+    let angle = 0
 
-    asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity))
+    asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H))
 }
 
 //setup the ship
@@ -95,70 +40,137 @@ let ship = new Ship(W/2, H/2, `rgb(255,255,255)`, 10, ctx,W,H)
 
 function render() {
     // fade Canvas
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     ctx.fillStyle = "rgba(19,19,19,0.75)"
     ctx.fillRect(0, 0, W, H);
-    // draw & update
-    asteroids.forEach( asteroid => {
-    asteroid.draw();
-    asteroid.update();
-    });
-    ship.draw();
-    ship.update();
 
-    //desenhar balas do player
+    //verifica colisões ANTES de desenhar
+    checkCollisionsBullets();
+    checkCollisionsShips();
+
+
+    if (ship.state == "alive"){
+      ship.draw();
+      ship.update();}
+
+    for (let i = 0; i < asteroids.length; i++) {
+      if (asteroids[i].state == "alive"){
+        asteroids[i].draw();
+        asteroids[i].update();}
+      else {
+        // remove inimigo se tiver sido detetada colisão c/1 bala
+        asteroids.splice(i, 1);
+        i--;
+      }
+    }
+    //desenhar balas do ship
     ship.drawBullets();
 
-    if (ship.move == 1){
-        ship.turnRight();
-    } else if (ship.move == -1){
-        ship.turnLeft();
-    }
-
-    if (ship.speed == 1){
-        ship.goForth();
-    } else if (ship.speed == -1){
-        ship.goBack();
-
-    }
-
-    //atualizar balas do player
+    //atualizar balas do ship
     ship.updateBullets();
 
-    angle++;
+    if (ship.move == "R"){
+        ship.turnRight();
+    }
+    if (ship.move == "L"){
+        ship.turnLeft();
+    }
+    if (ship.speed == "F"){
+        ship.goForth();
+    }
+    if (ship.speed == "B"){
+        ship.goBack();
+    }
     //new frame
     window.requestAnimationFrame(render);
     }
     render(); //startthe animation
 
 
+    function checkCollisionBullet(asteroid, bullet) {
+      // verifica colisão entre 1 inimigo e 1 bala
+      if (Math.sqrt((asteroid.x - bullet.x)*(asteroid.x - bullet.x) + (asteroid.y - bullet.y)*(asteroid.y - bullet.y)) > asteroid.R
+      ) {
+        return false;
+      }
+      return true;
+    }
+
+    function checkCollisionsBullets() {
+      //percorre o array de inimigos 
+      for (let i = 0; i < asteroids.length; i++) {
+        //percorre o array de balas 
+        for (let j = 0; j < ship.bullets.length; j++)
+          //verifica se há colisão entre dois objetos (1 inimigo e 1 bala)
+          if (checkCollisionBullet(asteroids[i], ship.bullets[j])) {
+            //sinaliza futura remoção da bala
+            ship.bullets[j].state = "dead";
+            //sinaliza futura remoção do inimigo
+            asteroids[i].state = "dead";
+          }
+      }
+    }
+
+
+
+    function checkCollisionShip(asteroid, ship) {
+      // verifica colisão entre 1 inimigo e 1 bala
+      if (Math.sqrt((asteroid.x - ship.x)*(asteroid.x - ship.x) + (asteroid.y - ship.y)*(asteroid.y - ship.y)) > asteroid.R
+      ) {
+        return false;
+      }
+      return true;
+    }
+
+    function checkCollisionsShips() {
+      //percorre o array de inimigos 
+      for (let i = 0; i < asteroids.length; i++) {
+        //percorre o array de balas 
+          if (checkCollisionShip(asteroids[i], ship)) {
+            //sinaliza futura remoção da bala
+            ship.state = "dead";
+            //sinaliza futura remoção do inimigo
+            asteroids[i].state = "dead";
+          }
+      }
+    }
+
+
+
+
+
+
+
+
+
     /*******************************************
-     * CONTROL PLAYER USING KEYS
+     * CONTROL ship USING KEYS
     *********************************************/
      window.addEventListener('keydown', (e)=>{
         e.preventDefault();
+        if (e.key == " "){ /*space bar*/
+          ship.createBullet();
+          console.log('space1');}
         if (e.key == 'ArrowRight'){ /*seta para direita*/
-          ship.move = 1;}
+          ship.move = "R";}
         if (e.key == 'ArrowLeft'){ /*seta para direita*/
-          ship.move = -1;}
+          ship.move = "L";}
         if (e.key == 'ArrowUp'){ /*seta para direita*/
-          ship.speed = 1;}  
+          ship.speed = "F";}  
         if (e.key == 'ArrowDown'){ /*seta para direita*/
-          ship.speed = -1;}
-        if (e.keyCode == 32){ /*space bar*/
-          ship.createBullet();}
-      }
-      );
-  
+          ship.speed = "B";}
+        }
+      );  
   
       window.addEventListener('keyup', (e) => {
         e.preventDefault();
-        if (e.key == 'ArrowRight' && ship.move == 1) /*seta para direita*/
-          ship.move = 0;
-        if (e.key == 'ArrowLeft' && ship.move == -1)/*seta para esquerda*/
-          ship.move = 0;
-        if (e.key == 'ArrowUp' && ship.speed == 1) /*seta para direita*/
-          ship.speed = 0;
-        if (e.key == 'ArrowDown' && ship.speed == -1) /*seta para direita*/
-          ship.speed = 0;
-          
+        if (e.key == 'ArrowRight' && ship.move == "R") /*seta para direita*/
+          ship.move = "";
+        if (e.key == 'ArrowLeft' && ship.move == "L")/*seta para esquerda*/
+          ship.move = "";
+        if (e.key == 'ArrowUp' && ship.speed == "F") /*seta para direita*/
+          ship.speed = "";
+        if (e.key == 'ArrowDown' && ship.speed == "B") /*seta para direita*/
+          ship.speed = "";
       });
