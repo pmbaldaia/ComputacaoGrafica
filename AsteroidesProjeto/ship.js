@@ -13,9 +13,10 @@ export default class Ship{
         this.bullets = []
         this.bulletsOrientationX = 2
         this.bulletsOrientationY = 2
-        this.state = 'alive'
+        this.state = 3
         this.sizeX = 10
         this.sizeY = 15
+        this.lives = 3
 
     }
 
@@ -72,7 +73,8 @@ export default class Ship{
           w: 4,
           h: 4,
           directionY: 6*Math.cos(this.orientation * Math.PI / 180),
-          directionX: 6*Math.sin(this.orientation * Math.PI / 180)
+          directionX: 6*Math.sin(this.orientation * Math.PI / 180),
+          state: 'alive'
         });
       }
 
@@ -84,6 +86,8 @@ export default class Ship{
           this.ctx.fillRect(this.bullets[i].x, this.bullets[i].y, this.bullets[i].w, this.bullets[i].h);
         }
       }
+
+      
 
     update() {
         // update vertical position

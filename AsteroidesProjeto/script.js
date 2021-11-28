@@ -9,6 +9,10 @@ canvas.height = window.innerHeight;
 const W = canvas.width, H = canvas.height; 
 
 
+let spaceTimer = 10
+
+
+
 // setup asteroids
 let asteroids = new Array(); 
 for (let i = 0; i < 5; i++) {
@@ -28,6 +32,8 @@ for (let i = 0; i < 5; i++) {
 
     asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H))
 }
+//starting nbr of enemies
+let nbr_enemies = 5
 
 //setup the ship
 let ship = new Ship(W/2, H/2, `rgb(255,255,255)`, 10, ctx,W,H)
@@ -39,22 +45,29 @@ let ship = new Ship(W/2, H/2, `rgb(255,255,255)`, 10, ctx,W,H)
 
 
 function render() {
-    // fade Canvas
     
+    //fade canvas
     ctx.fillStyle = "rgba(19,19,19,0.75)"
     ctx.fillRect(0, 0, W, H);
 
-
+    //verify lives and level
     score();
+
     //verifica colisões ANTES de desenhar
     checkCollisionsBullets();
     checkCollisionsShips();
 
+    
+      
 
-    if (ship.state == "alive"){
+
+
+    //verify if ship has lives
+    if (ship.state > 0){
       ship.draw();
       ship.update();}
 
+    //check if asteroids are alive
     for (let i = 0; i < asteroids.length; i++) {
       if (asteroids[i].state == "alive"){
         asteroids[i].draw();
@@ -65,12 +78,12 @@ function render() {
         i--;
       }
     }
-    //desenhar balas do ship
-    ship.drawBullets();
 
-    //atualizar balas do ship
+    //desenhar e atualizar balas do ship
+    ship.drawBullets();
     ship.updateBullets();
 
+    //check movements
     if (ship.move == "R"){
         ship.turnRight();
     }
@@ -83,36 +96,56 @@ function render() {
     if (ship.speed == "B"){
         ship.goBack();
     }
-    //new frame
     
-    if(ship.state == 'alive' && asteroids.length > 0){
+    // verify if you lost or go to next level
+    if(ship.state > 0 && asteroids.length > 0){
     window.requestAnimationFrame(render);}
     else if (asteroids.length == 0) {
-      ctx.fillStyle = "white";
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = 'bold 40px arial';
-      ctx.fillText("YOU WIN", W / 2, H / 2);
+      for (let i = 0; i < nbr_enemies; i++) {
+
+        
+        let color = `rgb(255,255,255)`; // randomcolor
+        // randomposition (inside Canvas)
+        let xInit = 20 + Math.random() * (W - 2 * 20);
+        let yInit = 20 + Math.random() * (H - 2 * 20);
+        // randomdirection
+        let direction = Math.random() * 2 * Math.PI;
+        //random size
+        let rayo = 40;
+        //random velocity
+        let velocity = 1 + Math.random() * (1);
+        //rotation 
+        let angle = 0
+    
+        asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H))
+      }
+      nbr_enemies++
+      window.requestAnimationFrame(render);
     }
     else {
-      ctx.fillStyle = "white";
+        ctx.fillStyle = "white";
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.font = 'bold 40px arial';
         ctx.fillText("YOU LOST", W / 2, H / 2);
     }
+
+    spaceTimer++
     }
     
     render(); //startthe animation
 
+    //set score and level
     function score(){
-      ctx.fillStyle = "white";
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'left';
-        ctx.font = 'bold 20px arial';
-        ctx.fillText("YOU LOST", 0, 0);
+        ctx.fillStyle = "white";
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.font = '20px arial';
+        let vidas = "Vidas: "+ ship.state;
+        let nivel = "Nível: " + (nbr_enemies - 4)
+        ctx.fillText(vidas, 5, 5);
+        ctx.fillText(nivel, 5, 25);
     }
-
 
     function checkCollisionBullet(asteroid, bullet) {
       // verifica colisão entre 1 inimigo e 1 bala
@@ -138,8 +171,6 @@ function render() {
       }
     }
 
-
-
     function checkCollisionShip(asteroid, ship) {
       // verifica colisão entre 1 inimigo e 1 bala
       if (Math.sqrt((asteroid.x - ship.x)*(asteroid.x - ship.x) + (asteroid.y - ship.y)*(asteroid.y - ship.y)) > asteroid.R
@@ -150,23 +181,20 @@ function render() {
     }
 
     function checkCollisionsShips() {
-      //percorre o array de inimigos 
       for (let i = 0; i < asteroids.length; i++) {
-        //percorre o array de balas 
           if (checkCollisionShip(asteroids[i], ship)) {
-            //sinaliza futura remoção da bala
-            ship.state = "dead";
-            //sinaliza futura remoção do inimigo
+            ship.state = ship.state - 1;
             asteroids[i].state = "dead";
+            console.log(ship.state);
           }
       }
     }
 
-
     //CONTROL ship USING KEYS
      window.addEventListener('keydown', (e)=>{
         e.preventDefault();
-        if (e.key == " "){ /*space bar*/
+        if (e.key == " " && spaceTimer > 10){ /*space bar*/
+          spaceTimer = 0
           ship.createBullet();}
         if (e.key == 'ArrowRight'){ /*seta para direita*/
           ship.move = "R";}
@@ -176,7 +204,10 @@ function render() {
           ship.speed = "F";}
         if (e.key == 'ArrowDown'){ /*seta para direita*/
           ship.speed = "B";}
+        if (e.key == 'ArrowDown'){ /*seta para direita*/
+          ship.speed = "B";}
         }
+        
       );
   
       window.addEventListener('keyup', (e) => {
