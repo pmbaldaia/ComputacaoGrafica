@@ -36,7 +36,7 @@ for (let i = 0; i < 5; i++) {
 let nbr_enemies = 5
 
 //setup the ship
-let ship = new Ship(W/2, H/2, `rgb(255,255,255)`, 10, ctx,W,H)
+let ship = new Ship(W/2, H/2, `rgb(255,255,255)`, ctx,W,H)
 
 
   
@@ -56,11 +56,6 @@ function render() {
     //verifica colisões ANTES de desenhar
     checkCollisionsBullets();
     checkCollisionsShips();
-
-    
-      
-
-
 
     //verify if ship has lives
     if (ship.state > 0){
@@ -99,8 +94,8 @@ function render() {
     
     // verify if you lost or go to next level
     if(ship.state > 0 && asteroids.length > 0){
-    window.requestAnimationFrame(render);}
-    else if (asteroids.length == 0) {
+    window.requestAnimationFrame(render);
+    } else if (asteroids.length == 0) {
       for (let i = 0; i < nbr_enemies; i++) {
 
         
@@ -121,18 +116,16 @@ function render() {
       }
       nbr_enemies++
       window.requestAnimationFrame(render);
-    }
-    else {
+    } else {
         ctx.fillStyle = "white";
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.font = 'bold 40px arial';
         ctx.fillText("YOU LOST", W / 2, H / 2);
     }
-
     spaceTimer++
     }
-    
+  
     render(); //startthe animation
 
     //set score and level
@@ -173,7 +166,7 @@ function render() {
 
     function checkCollisionShip(asteroid, ship) {
       // verifica colisão entre 1 inimigo e 1 bala
-      if (Math.sqrt((asteroid.x - ship.x)*(asteroid.x - ship.x) + (asteroid.y - ship.y)*(asteroid.y - ship.y)) > asteroid.R
+      if (Math.sqrt((asteroid.x - (ship.x))*(asteroid.x - ship.x) + (asteroid.y - ship.y)*(asteroid.y - ship.y)) - 15 > asteroid.R
       ) {
         return false;
       }
@@ -193,7 +186,7 @@ function render() {
     //CONTROL ship USING KEYS
      window.addEventListener('keydown', (e)=>{
         e.preventDefault();
-        if (e.key == " " && spaceTimer > 10){ /*space bar*/
+        if (e.key == " " && spaceTimer > 20){ /*space bar*/
           spaceTimer = 0
           ship.createBullet();}
         if (e.key == 'ArrowRight'){ /*seta para direita*/

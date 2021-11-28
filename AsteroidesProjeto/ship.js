@@ -1,9 +1,8 @@
 export default class Ship{
-    constructor(x,y,c,r,ctx,W,H){
+    constructor(x,y,c,ctx,W,H){
         this.x = x; // initial X position
         this.y = y; // initial Y position
         this.c = c; // color
-        this.r = r; //collision
         this.orientation = 0
         this.move = ''
         this.ctx = ctx;
@@ -57,7 +56,7 @@ export default class Ship{
         for (let i = 0; i < this.bullets.length; i++) {
           this.bullets[i].y -= this.bullets[i].directionY;        // problem: moves along wiht the ship 
           this.bullets[i].x += this.bullets[i].directionX;
-          if (this.bullets[i].y < 0 || this.bullets[i].y > this.H || this.bullets[i].x < 0 || this.bullets[i].x > this.W ) {
+          if (this.bullets[i].y < 0 || this.bullets[i].y > this.H || this.bullets[i].x < 0 || this.bullets[i].x > this.W  || this.bullets[i].state == "dead") {
             this.bullets.splice(i, 1);  // remove bala se esta atingir o topo do Canvas
             i--;
           }
@@ -66,7 +65,6 @@ export default class Ship{
 
     createBullet() {
         // acrescenta uma nova bala no array de balas, apartir da posição do player
-        
         this.bullets.push({
           x: this.x + 20*Math.sin(this.orientation * Math.PI / 180),
           y: this.y - 20*Math.cos(this.orientation * Math.PI / 180),
@@ -86,8 +84,6 @@ export default class Ship{
           this.ctx.fillRect(this.bullets[i].x, this.bullets[i].y, this.bullets[i].w, this.bullets[i].h);
         }
       }
-
-      
 
     update() {
         // update vertical position
