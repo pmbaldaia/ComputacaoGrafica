@@ -1,5 +1,5 @@
 export default class Asteroid { 
-    constructor(x, y, r, d, c, v, angle, ctx, W, H) { // CONSTRUCTOR
+    constructor(x, y, r, d, c, v, angle, ctx, W, H,rotationSide) { // CONSTRUCTOR
         this.x = x; // initial X position
         this.y = y; // initial Y position
         // (constant) horizontal displacement(velocity): d is a direction angle
@@ -13,13 +13,14 @@ export default class Asteroid {
         this.W = W
         this.H = H
         this.state = "alive";
+        this.rotationSide = rotationSide
     }
 
     draw() {
     this.ctx.strokeStyle = this.c;
     this.ctx.save();
     this.ctx.translate(this.x,this.y)
-    this.ctx.rotate(this.angle * Math.PI / 360)
+    this.ctx.rotate(this.rotationSide * this.angle * Math.PI / 360)
     this.ctx.beginPath();
     this.ctx.lineTo(-5,-40)
     this.ctx.lineTo(-30,-30)
@@ -55,6 +56,6 @@ export default class Asteroid {
         if (this.x < - (this.x+(-20+25)/2) -this.R*2){
             this.x = this.x + (this.W + this.R*2)
         }  
-        this.angle = this.angle + 1  
+        this.angle = this.angle + 1
     }
 }

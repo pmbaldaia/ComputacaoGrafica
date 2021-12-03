@@ -1,5 +1,6 @@
 import Ship from './ship.js';
 import Asteroid from './asteroid.js'
+import EnemyShip from './enemyShip.js';
 
 const canvas = document.querySelector('#myCanvas');
 const ctx = canvas.getContext("2d");
@@ -9,7 +10,7 @@ canvas.height = window.innerHeight;
 const W = canvas.width, H = canvas.height; 
 
 
-let spaceTimer = 10
+let spaceTimer = 20
 
 
 
@@ -29,9 +30,28 @@ for (let i = 0; i < 5; i++) {
     let velocity = 1 + Math.random() * (1);
     //rotation 
     let angle = 0
+    let rotationSide = Math.random() > 0.5 ? 1 : -1
 
-    asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H))
+    asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H, rotationSide))
 }
+
+let enemyShip = new Array(); 
+for (let i = 0; i < 2; i++) {
+
+    let color = `rgb(255,0,0)`; // randomcolor
+    // randomposition (inside Canvas)
+    let xInit = 20 + Math.random() * (W - 2 * 20);
+    let yInit = 20 + Math.random() * (H - 2 * 20);
+    // randomdirection
+    let direction = Math.random() * 2 * Math.PI;
+    //random size
+    let rayo = 25;
+    //random velocity
+    let velocity = 2 + Math.random() * (1);
+
+    enemyShip.push(new EnemyShip(xInit, yInit, rayo, direction, color, velocity, ctx, W, H))
+}
+
 //starting nbr of enemies
 let nbr_enemies = 5
 
@@ -54,16 +74,20 @@ function render() {
     score();
 
     //verifica colisões ANTES de desenhar
-    checkCollisionsBullets();
-    checkCollisionsShips();
+    checkCollisionsBulletsAsteroids();
+    checkCollisionsBulletsEnemy();
+    checkCollisionsShipsAsteroids();
+    checkCollisionsShipsEnemy();
 
     //verify if ship has lives
-    if (ship.state > 0){
+    if (ship.state >= 0){
       ship.draw();
-      ship.update();}
+    }
+    ship.update();
 
     //check if asteroids are alive
-    for (let i = 0; i < asteroids.length; i++) {
+    if(asteroids.length > 0){
+      for (let i = 0; i < asteroids.length; i++) {
       if (asteroids[i].state == "alive"){
         asteroids[i].draw();
         asteroids[i].update();}
@@ -73,6 +97,23 @@ function render() {
         i--;
       }
     }
+    }
+    
+    
+    //check if enemies are alive
+    if(enemyShip.length > 0){
+      for (let i = 0; i < enemyShip.length; i++) {
+      if (enemyShip[i].state == "alive"){
+        enemyShip[i].draw();
+        enemyShip[i].update();}
+      else {
+        // remove inimigo se tiver sido detetada colisão c/1 bala
+        enemyShip.splice(i, 1);
+        i--;
+      }
+    }
+    }
+    
 
     //desenhar e atualizar balas do ship
     ship.drawBullets();
@@ -93,12 +134,10 @@ function render() {
     }
     
     // verify if you lost or go to next level
-    if(ship.state > 0 && asteroids.length > 0){
+    if(ship.state >= 0 && asteroids.length + enemyShip.length > 0){
     window.requestAnimationFrame(render);
-    } else if (asteroids.length == 0) {
+    } else if (asteroids.length + enemyShip.length == 0) {
       for (let i = 0; i < nbr_enemies; i++) {
-
-        
         let color = `rgb(255,255,255)`; // randomcolor
         // randomposition (inside Canvas)
         let xInit = 20 + Math.random() * (W - 2 * 20);
@@ -111,19 +150,37 @@ function render() {
         let velocity = 1 + Math.random() * (1);
         //rotation 
         let angle = 0
+        //rotation side
+        let rotationSide = Math.random() > 0.5 ? 1 : -1
     
-        asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H))
+        asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H, rotationSide))
       }
+      for (let i = 0; i < nbr_enemies/3; i++) {
+
+        let color = `rgb(255,0,0)`; // randomcolor
+        // randomposition (inside Canvas)
+        let xInit = 20 + Math.random() * (W - 2 * 20);
+        let yInit = 20 + Math.random() * (H - 2 * 20);
+        // randomdirection
+        let direction = Math.random() * 2 * Math.PI;
+        //random size
+        let rayo = 25;
+        //random velocity
+        let velocity = 2 + Math.random() * (1);
+
+        enemyShip.push(new EnemyShip(xInit, yInit, rayo, direction, color, velocity, ctx, W, H))
+    }
       nbr_enemies++
       window.requestAnimationFrame(render);
-    } else {
+    } else if(ship.state < 0) {
         ctx.fillStyle = "white";
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.font = 'bold 40px arial';
         ctx.fillText("YOU LOST", W / 2, H / 2);
     }
-    spaceTimer++
+
+    spaceTimer++   
     }
   
     render(); //startthe animation
@@ -140,7 +197,7 @@ function render() {
         ctx.fillText(nivel, 5, 25);
     }
 
-    function checkCollisionBullet(asteroid, bullet) {
+    function checkCollisionBulletAsteroids(asteroid, bullet) {
       // verifica colisão entre 1 inimigo e 1 bala
       if (Math.sqrt((asteroid.x - bullet.x)*(asteroid.x - bullet.x) + (asteroid.y - bullet.y)*(asteroid.y - bullet.y)) > asteroid.R
       ) {
@@ -149,13 +206,13 @@ function render() {
       return true;
     }
 
-    function checkCollisionsBullets() {
+    function checkCollisionsBulletsAsteroids() {
       //percorre o array de inimigos 
       for (let i = 0; i < asteroids.length; i++) {
         //percorre o array de balas 
         for (let j = 0; j < ship.bullets.length; j++)
           //verifica se há colisão entre dois objetos (1 inimigo e 1 bala)
-          if (checkCollisionBullet(asteroids[i], ship.bullets[j])) {
+          if (checkCollisionBulletAsteroids(asteroids[i], ship.bullets[j])) {
             //sinaliza futura remoção da bala
             ship.bullets[j].state = "dead";
             //sinaliza futura remoção do inimigo
@@ -164,7 +221,31 @@ function render() {
       }
     }
 
-    function checkCollisionShip(asteroid, ship) {
+    function checkCollisionBulletEnemy(Enemy, bullet) {
+      // verifica colisão entre 1 inimigo e 1 bala
+      if (Math.sqrt((Enemy.x - bullet.x)*(Enemy.x - bullet.x) + (Enemy.y - bullet.y)*(Enemy.y - bullet.y)) > Enemy.R
+      ) {
+        return false;
+      }
+      return true;
+    }
+
+    function checkCollisionsBulletsEnemy() {
+      //percorre o array de inimigos 
+      for (let i = 0; i < enemyShip.length; i++) {
+        //percorre o array de balas 
+        for (let j = 0; j < ship.bullets.length; j++)
+          //verifica se há colisão entre dois objetos (1 inimigo e 1 bala)
+          if (checkCollisionBulletEnemy(enemyShip[i], ship.bullets[j])) {
+            //sinaliza futura remoção da bala
+            ship.bullets[j].state = "dead";
+            //sinaliza futura remoção do inimigo
+            enemyShip[i].state = "dead";
+        }
+      }
+    }
+
+    function checkCollisionShipAsteroids(asteroid, ship) {
       // verifica colisão entre 1 inimigo e 1 bala
       if (Math.sqrt((asteroid.x - (ship.x))*(asteroid.x - ship.x) + (asteroid.y - ship.y)*(asteroid.y - ship.y)) - 15 > asteroid.R
       ) {
@@ -173,12 +254,29 @@ function render() {
       return true;
     }
 
-    function checkCollisionsShips() {
+    function checkCollisionsShipsAsteroids() {
       for (let i = 0; i < asteroids.length; i++) {
-          if (checkCollisionShip(asteroids[i], ship)) {
+          if (checkCollisionShipAsteroids(asteroids[i], ship)) {
             ship.state = ship.state - 1;
             asteroids[i].state = "dead";
-            console.log(ship.state);
+          }
+      }
+    }
+
+    function checkCollisionShipEnemy(enemy, ship) {
+      // verifica colisão entre 1 inimigo e 1 bala
+      if (Math.sqrt((enemy.x - (ship.x))*(enemy.x - ship.x) + (enemy.y - ship.y)*(enemy.y - ship.y)) - 15 > enemy.R
+      ) {
+        return false;
+      }
+      return true;
+    }
+
+    function checkCollisionsShipsEnemy() {
+      for (let i = 0; i < enemyShip.length; i++) {
+          if (checkCollisionShipEnemy(enemyShip[i], ship)) {
+            ship.state = ship.state - 1;
+            enemyShip[i].state = "dead";
           }
       }
     }
@@ -201,7 +299,7 @@ function render() {
           ship.speed = "B";}
         }
         
-      );
+    );
   
       window.addEventListener('keyup', (e) => {
         e.preventDefault();

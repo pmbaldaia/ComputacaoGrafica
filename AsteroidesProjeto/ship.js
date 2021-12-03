@@ -3,20 +3,18 @@ export default class Ship{
         this.x = x; // initial X position
         this.y = y; // initial Y position
         this.c = c; // color
-        this.orientation = 0
+        this.r = 20
+        this.orientation = 0 
         this.move = ''
-        this.ctx = ctx;
         this.speed = ''
+        this.ctx = ctx;
         this.W = W
         this.H = H
         this.bullets = []
-        this.bulletsOrientationX = 2
-        this.bulletsOrientationY = 2
         this.state = 3
         this.sizeX = 10
         this.sizeY = 15
         this.lives = 3
-
     }
 
     draw(){
