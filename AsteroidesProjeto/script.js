@@ -171,7 +171,7 @@ function render() {
         ctx.fillStyle = "white";
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = 'bold 40px arial';
+        ctx.font = 'bold 40px Revamped';
         ctx.fillText("YOU LOST", W / 2, H / 2);
     }
 
@@ -179,10 +179,10 @@ function render() {
     }
   
     render(); //startthe animation
-
+    intervalFunc();
 
     function intervalFunc(){
-      setInterval(createEnemyShipBullets() ,1000)
+      interval = setInterval(createEnemyShipBullets() ,1000)
     }
     
     
@@ -201,9 +201,9 @@ function render() {
         ctx.fillStyle = "white";
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
-        ctx.font = '20px arial';
+        ctx.font = '16px Revamped';
         let vidas = "Vidas: "+ ship.state;
-        let nivel = "Nível: " + (nbr_enemies - 4)
+        let nivel = "Nivel: " + (nbr_enemies - 4)
         ctx.fillText(vidas, 5, 5);
         ctx.fillText(nivel, 5, 25);
     }
