@@ -182,16 +182,20 @@ function render() {
     intervalFunc();
 
     function intervalFunc(){
-      interval = setInterval(createEnemyShipBullets() ,1000)
+      interval = setInterval(createEnemyShipBullets , 2000)
     }
-    
-    
     
     function createEnemyShipBullets(){
       if(enemyShip.length > 0){
       for (let i = 0; i < enemyShip.length; i++) {
         enemyShip[i].createEnemyBullet();
-      }
+        console.log(enemyShip[i].orientation);
+        if(enemyShip[i].orientation == 360){
+        enemyShip[i].orientation =  0
+        } else{
+          enemyShip[i].orientation =  enemyShip[i].orientation + 90
+        }
+      } 
       console.log('shot');
     }}
 

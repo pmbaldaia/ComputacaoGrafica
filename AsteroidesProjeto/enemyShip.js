@@ -48,8 +48,8 @@ export default class EnemyShip{
 
     updateEnemyBullets() {
         for (let i = 0; i < this.bullets.length; i++) {
-          this.bullets[i].y -= this.bullets[i].directionY;        // problem: moves along wiht the ship 
-          this.bullets[i].x += this.bullets[i].directionX;
+          this.bullets[i].y -= this.bullets[i].directionY * 5;        // problem: moves along wiht the ship 
+          this.bullets[i].x += this.bullets[i].directionX * 5;
           if (this.bullets[i].y < 0 || this.bullets[i].y > this.H || this.bullets[i].x < 0 || this.bullets[i].x > this.W  || this.bullets[i].state == "dead") {
             this.bullets.splice(i, 1);  // remove bala se esta atingir o topo do Canvas
             i--;
@@ -60,12 +60,12 @@ export default class EnemyShip{
     createEnemyBullet() {
         // acrescenta uma nova bala no array de balas, apartir da posição do player
         this.bullets.push({
-          x: this.x + 20*Math.sin(this.orientation * Math.PI),
-          y: this.y - 20*Math.cos(this.orientation * Math.PI),
+          x: this.x,
+          y: this.y,
           w: 4,
           h: 4,
-          directionY: 3*Math.cos(this.orientation * Math.PI),
-          directionX: 3*Math.sin(this.orientation * Math.PI),
+          directionY: Math.cos(this.orientation),
+          directionX: Math.sin(this.orientation),
           state: 'alive'
         });
     }
