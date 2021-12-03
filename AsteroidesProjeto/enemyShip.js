@@ -13,9 +13,10 @@ export default class EnemyShip{
         this.H = H
         this.state = "alive";
         this.bullets = []
+        this.orientation = 0
     }
 
-    draw(){
+    draw() {
         this.ctx.strokeStyle = "red";
         this.ctx.save()
         this.ctx.translate(this.x,this.y)
@@ -45,7 +46,7 @@ export default class EnemyShip{
         this.ctx.restore()
     }
 
-    updateBullets() {
+    updateEnemyBullets() {
         for (let i = 0; i < this.bullets.length; i++) {
           this.bullets[i].y -= this.bullets[i].directionY;        // problem: moves along wiht the ship 
           this.bullets[i].x += this.bullets[i].directionX;
@@ -54,29 +55,29 @@ export default class EnemyShip{
             i--;
           }
         }
-      }
+    }
 
-    createBullet() {
+    createEnemyBullet() {
         // acrescenta uma nova bala no array de balas, apartir da posição do player
         this.bullets.push({
-          x: this.x + 20*Math.sin(this.orientation * Math.PI / 180),
-          y: this.y - 20*Math.cos(this.orientation * Math.PI / 180),
+          x: this.x + 20*Math.sin(this.orientation * Math.PI),
+          y: this.y - 20*Math.cos(this.orientation * Math.PI),
           w: 4,
           h: 4,
-          directionY: 6*Math.cos(this.orientation * Math.PI / 180),
-          directionX: 6*Math.sin(this.orientation * Math.PI / 180),
+          directionY: 3*Math.cos(this.orientation * Math.PI),
+          directionX: 3*Math.sin(this.orientation * Math.PI),
           state: 'alive'
         });
-      }
+    }
 
-      drawBullets() {
+    drawEnemyBullets() {
         // desenha todas as balas
         for (let i = 0; i < this.bullets.length; i++) {
           // console.log(this.bullets[i])
-          this.ctx.fillStyle = "white";
+          this.ctx.fillStyle = "red";
           this.ctx.fillRect(this.bullets[i].x, this.bullets[i].y, this.bullets[i].w, this.bullets[i].h);
         }
-      }
+    }
 
     update() {
         this.y += this.dY; // update vertical position

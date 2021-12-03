@@ -59,7 +59,7 @@ export default class Ship{
             i--;
           }
         }
-      }
+    }
 
     createBullet() {
         // acrescenta uma nova bala no array de balas, apartir da posição do player
@@ -72,16 +72,16 @@ export default class Ship{
           directionX: 6*Math.sin(this.orientation * Math.PI / 180),
           state: 'alive'
         });
-      }
+    }
 
-      drawBullets() {
+    drawBullets() {
         // desenha todas as balas
         for (let i = 0; i < this.bullets.length; i++) {
           // console.log(this.bullets[i])
           this.ctx.fillStyle = "white";
           this.ctx.fillRect(this.bullets[i].x, this.bullets[i].y, this.bullets[i].w, this.bullets[i].h);
         }
-      }
+    }
 
     update() {
         // update vertical position
