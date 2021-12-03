@@ -9,10 +9,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const W = canvas.width, H = canvas.height; 
 
-
+let interval;
 let spaceTimer = 20
-
-
 
 // setup asteroids
 let asteroids = new Array(); 
@@ -58,12 +56,6 @@ let nbr_enemies = 5
 //setup the ship
 let ship = new Ship(W/2, H/2, `rgb(255,255,255)`, ctx,W,H)
 
-
-  
-
-
-
-
 function render() {
     
     //fade canvas
@@ -99,25 +91,28 @@ function render() {
     }
     }
     
-    
     //check if enemies are alive
     if(enemyShip.length > 0){
       for (let i = 0; i < enemyShip.length; i++) {
-      if (enemyShip[i].state == "alive"){
-        enemyShip[i].draw();
-        enemyShip[i].update();}
-      else {
-        // remove inimigo se tiver sido detetada colisão c/1 bala
-        enemyShip.splice(i, 1);
-        i--;
+        if (enemyShip[i].state == "alive"){
+          enemyShip[i].draw();
+          enemyShip[i].update();
+          enemyShip[i].drawEnemyBullets();
+          enemyShip[i].updateEnemyBullets();
+          }
+        else {
+          // remove inimigo se tiver sido detetada colisão c/1 bala
+          enemyShip.splice(i, 1);
+          i--;
+        }
       }
-    }
     }
     
 
     //desenhar e atualizar balas do ship
     ship.drawBullets();
     ship.updateBullets();
+
 
     //check movements
     if (ship.move == "R"){
@@ -185,6 +180,22 @@ function render() {
   
     render(); //startthe animation
 
+
+    function intervalFunc(){
+      setInterval(createEnemyShipBullets() ,1000)
+    }
+    
+    
+    
+    function createEnemyShipBullets(){
+      if(enemyShip.length > 0){
+      for (let i = 0; i < enemyShip.length; i++) {
+        enemyShip[i].createEnemyBullet();
+      }
+      console.log('shot');
+    }}
+
+
     //set score and level
     function score(){
         ctx.fillStyle = "white";
@@ -197,6 +208,7 @@ function render() {
         ctx.fillText(nivel, 5, 25);
     }
 
+    //set collisions
     function checkCollisionBulletAsteroids(asteroid, bullet) {
       // verifica colisão entre 1 inimigo e 1 bala
       if (Math.sqrt((asteroid.x - bullet.x)*(asteroid.x - bullet.x) + (asteroid.y - bullet.y)*(asteroid.y - bullet.y)) > asteroid.R
@@ -295,10 +307,7 @@ function render() {
           ship.speed = "F";}
         if (e.key == 'ArrowDown'){ /*seta para direita*/
           ship.speed = "B";}
-        if (e.key == 'ArrowDown'){ /*seta para direita*/
-          ship.speed = "B";}
-        }
-        
+        } 
     );
   
       window.addEventListener('keyup', (e) => {
