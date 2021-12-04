@@ -198,7 +198,6 @@ function render() {
       } 
     }}
 
-
     //set score and level
     function score(){
         ctx.fillStyle = "white";
@@ -210,7 +209,6 @@ function render() {
         ctx.fillText(vidas, 5, 5);
         ctx.fillText(nivel, 5, 25);
     }
-
     //set collisions
     //asteroids - bulletsFriend
     function checkCollisionBulletAsteroids(asteroid, bullet) {
@@ -218,8 +216,9 @@ function render() {
       if (Math.sqrt((asteroid.x - bullet.x)*(asteroid.x - bullet.x) + (asteroid.y - bullet.y)*(asteroid.y - bullet.y)) > asteroid.R
       ) {
         return false;
-      }
+      } else {
       return true;
+      }
     }
 
     function checkCollisionsBulletsAsteroids() {
@@ -268,8 +267,10 @@ function render() {
       if (Math.sqrt((asteroid.x - (ship.x))*(asteroid.x - ship.x) + (asteroid.y - ship.y)*(asteroid.y - ship.y)) - 15 > asteroid.R
       ) {
         return false;
+      } else {
+        return true;
       }
-      return true;
+      
     }
 
     function checkCollisionsShipsAsteroids() {
