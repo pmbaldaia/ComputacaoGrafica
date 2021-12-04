@@ -29,8 +29,9 @@ for (let i = 0; i < 5; i++) {
     //rotation 
     let angle = 0
     let rotationSide = Math.random() > 0.5 ? 1 : -1
+    let L = 1
 
-    asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H, rotationSide))
+    asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H, rotationSide,L))
 }
 
 let enemyShip = new Array(); 
@@ -148,8 +149,9 @@ function render() {
         let angle = 0
         //rotation side
         let rotationSide = Math.random() > 0.5 ? 1 : -1
+        let L = 1
     
-        asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H, rotationSide))
+        asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H, rotationSide, L))
       }
       for (let i = 0; i < nbr_enemies/3; i++) {
 
@@ -232,6 +234,48 @@ function render() {
             ship.bullets[j].state = "dead";
             //sinaliza futura remoção do inimigo
             asteroids[i].state = "dead";
+            if (asteroids[i].L == 1){
+              for (let i = 0; i < 2; i++) {
+                let color = `rgb(255,255,255)`; // randomcolor
+                // randomposition (inside Canvas)
+                let xInit = asteroids[i].x;
+                let yInit = asteroids[i].y;
+                // randomdirection
+                let direction = Math.random() * 2 * Math.PI;
+                //random size
+                let rayo = 20;
+                //random velocity
+                let velocity = 1 + Math.random() * (1);
+                //rotation 
+                let angle = 0
+                //rotation side
+                let rotationSide = Math.random() > 0.5 ? 1 : -1
+                let L = 2
+                console.log('two');
+            
+                asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H, rotationSide, L))
+              }
+            } else if(asteroids[i].L == 2){
+              for (let i = 0; i < 2; i++) {
+                let color = `rgb(255,255,255)`; // randomcolor
+                // randomposition (inside Canvas)
+                let xInit = asteroids[i].x;
+                let yInit = asteroids[i].y;
+                // randomdirection
+                let direction = Math.random() * 2 * Math.PI;
+                //random size
+                let rayo = 20;
+                //random velocity
+                let velocity = 1 + Math.random() * (1);
+                //rotation 
+                let angle = 0;
+                //rotation side
+                let rotationSide = Math.random() > 0.5 ? 1 : -1;
+                let L = 4;
+                console.log('two');
+                asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H, rotationSide, L))
+              }
+            }
         }
       }
     }
@@ -278,6 +322,48 @@ function render() {
           if (checkCollisionShipAsteroids(asteroids[i], ship)) {
             ship.state = ship.state - 1;
             asteroids[i].state = "dead";
+            if (asteroids[i].L == 1){
+              for (let i = 0; i < 2; i++) {
+                let color = `rgb(255,255,255)`; // randomcolor
+                // randomposition (inside Canvas)
+                let xInit = asteroids[i].x;
+                let yInit = asteroids[i].y;
+                // randomdirection
+                let direction = Math.random() * 2 * Math.PI;
+                //random size
+                let rayo = 20;
+                //random velocity
+                let velocity = 1 + Math.random() * (1);
+                //rotation 
+                let angle = 0
+                //rotation side
+                let rotationSide = Math.random() > 0.5 ? 1 : -1
+                let L = 2
+                console.log('two');
+            
+                asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H, rotationSide, L))
+              }
+            } else if(asteroids[i].L == 2){
+              for (let i = 0; i < 2; i++) {
+                let color = `rgb(255,255,255)`; // randomcolor
+                // randomposition (inside Canvas)
+                let xInit = asteroids[i].x;
+                let yInit = asteroids[i].y;
+                // randomdirection
+                let direction = Math.random() * 2 * Math.PI;
+                //random size
+                let rayo = 20;
+                //random velocity
+                let velocity = 1 + Math.random() * (1);
+                //rotation 
+                let angle = 0;
+                //rotation side
+                let rotationSide = Math.random() > 0.5 ? 1 : -1;
+                let L = 4;
+                console.log('two');
+                asteroids.push(new Asteroid(xInit, yInit, rayo, direction, color, velocity, angle, ctx, W, H, rotationSide, L))
+              }
+            }
           }
       }
     }

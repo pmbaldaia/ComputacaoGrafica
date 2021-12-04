@@ -1,5 +1,5 @@
 export default class Asteroid { 
-    constructor(x, y, r, d, c, v, angle, ctx, W, H,rotationSide) { // CONSTRUCTOR
+    constructor(x, y, r, d, c, v, angle, ctx, W, H,rotationSide,L) { // CONSTRUCTOR
         this.x = x; // initial X position
         this.y = y; // initial Y position
         // (constant) horizontal displacement(velocity): d is a direction angle
@@ -14,6 +14,7 @@ export default class Asteroid {
         this.H = H
         this.state = "alive";
         this.rotationSide = rotationSide
+        this.L = L
     }
 
     draw() {
@@ -22,21 +23,21 @@ export default class Asteroid {
     this.ctx.translate(this.x,this.y)
     this.ctx.rotate(this.rotationSide * this.angle * Math.PI / 360)
     this.ctx.beginPath();
-    this.ctx.lineTo(-5,-40)
-    this.ctx.lineTo(-30,-30)
-    this.ctx.lineTo(-30,-25)
-    this.ctx.lineTo(-45,0)
-    this.ctx.lineTo(-25,10)
-    this.ctx.lineTo(-40,20)
-    this.ctx.lineTo(-30,35)
-    this.ctx.lineTo(-5,35)
-    this.ctx.lineTo(5,25)
-    this.ctx.lineTo(15,40)
-    this.ctx.lineTo(35,5)
-    this.ctx.lineTo(30,-5)
-    this.ctx.lineTo(40,-15)
-    this.ctx.lineTo(35,-35)
-    this.ctx.lineTo(-5,-40)
+    this.ctx.lineTo(-5/this.L,-40/this.L)
+    this.ctx.lineTo(-30/this.L,-30/this.L)
+    this.ctx.lineTo(-30/this.L,-25/this.L)
+    this.ctx.lineTo(-45/this.L,0/this.L)
+    this.ctx.lineTo(-25/this.L,10/this.L)
+    this.ctx.lineTo(-40/this.L,20/this.L)
+    this.ctx.lineTo(-30/this.L,35/this.L)
+    this.ctx.lineTo(-5/this.L,35/this.L)
+    this.ctx.lineTo(5/this.L,25/this.L)
+    this.ctx.lineTo(15/this.L,40/this.L)
+    this.ctx.lineTo(35/this.L,5/this.L)
+    this.ctx.lineTo(30/this.L,-5/this.L)
+    this.ctx.lineTo(40/this.L,-15/this.L)
+    this.ctx.lineTo(35/this.L,-35/this.L)
+    this.ctx.lineTo(-5/this.L,-40/this.L)
     this.ctx.stroke();
     this.ctx.restore()
     }
