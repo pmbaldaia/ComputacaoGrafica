@@ -1,6 +1,6 @@
-import Ship from './ship.js';
-import Asteroid from './asteroid.js'
-import EnemyShip from './enemyShip.js';
+import Ship from './assets/js/ship.js';
+import Asteroid from './assets/js/asteroid.js';
+import EnemyShip from './assets/js/enemyShip.js';
 
 const canvas = document.querySelector('#myCanvas');
 const ctx = canvas.getContext("2d");
@@ -59,16 +59,13 @@ let ship = new Ship(W / 2, H / 2, `rgb(255,255,255)`, ctx, W, H)
 
 function render() {
 
-
-  //fade canvas
-
   let background = new Image();
-  background.src = "./Img/galaxy.jpg";
+  background.src = "../assets/img/galaxy.jpg";
   background.onload = function () {
     ctx.drawImage(background, 0, 0);
   }
 
-  ctx.fillStyle = "rgba(211,211,211,0.001)"
+  ctx.fillStyle = "rgba(211,211,211)"
   ctx.fillRect(0, 0, W, H);
 
   //verify lives and level
@@ -180,8 +177,8 @@ function render() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = 'bold 40px Revamped';
-    ctx.fillText("PERDEU !", W / 2, H / 2.5);
-    ctx.fillText("PRESSIONE ENTER PARA RECOMEÇAR !", W / 2, H / 2);
+    ctx.fillText("PERDEU!", W / 2, H / 3);
+    ctx.fillText("PRESSIONE ENTER PARA VOLTAR AO INICIO", W / 2, H / 2);
   }
 
   spaceTimer++

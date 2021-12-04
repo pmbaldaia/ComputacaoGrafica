@@ -5,7 +5,7 @@ body {
 }
 .body{
     color: #fff;
-    background-image: url(img/galaxy.jpg);
+    background-image: url(../img/galaxy.jpg);
     opacity: 0.9;
     font: 1.5em "Revamped";
     justify-content: center;
