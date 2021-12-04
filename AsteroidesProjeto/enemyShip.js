@@ -64,8 +64,8 @@ export default class EnemyShip{
           y: this.y,
           w: 4,
           h: 4,
-          directionY: Math.cos(this.orientation),
-          directionX: Math.sin(this.orientation),
+          directionY: Math.cos(this.orientation * Math.PI /180),
+          directionX: Math.sin(this.orientation * Math.PI /180),
           state: 'alive'
         });
     }

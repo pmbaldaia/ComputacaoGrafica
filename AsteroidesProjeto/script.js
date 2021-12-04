@@ -70,6 +70,7 @@ function render() {
     checkCollisionsBulletsEnemy();
     checkCollisionsShipsAsteroids();
     checkCollisionsShipsEnemy();
+    checkCollisionsShipBulletsEnemy();
 
     //verify if ship has lives
     if (ship.state >= 0){
@@ -182,21 +183,19 @@ function render() {
     intervalFunc();
 
     function intervalFunc(){
-      interval = setInterval(createEnemyShipBullets , 2000)
+      interval = setInterval(createEnemyShipBullets , 10)
     }
     
     function createEnemyShipBullets(){
       if(enemyShip.length > 0){
       for (let i = 0; i < enemyShip.length; i++) {
         enemyShip[i].createEnemyBullet();
-        console.log(enemyShip[i].orientation);
         if(enemyShip[i].orientation == 360){
         enemyShip[i].orientation =  0
         } else{
           enemyShip[i].orientation =  enemyShip[i].orientation + 90
         }
       } 
-      console.log('shot');
     }}
 
 
@@ -213,6 +212,7 @@ function render() {
     }
 
     //set collisions
+    //asteroids - bulletsFriend
     function checkCollisionBulletAsteroids(asteroid, bullet) {
       // verifica colisão entre 1 inimigo e 1 bala
       if (Math.sqrt((asteroid.x - bullet.x)*(asteroid.x - bullet.x) + (asteroid.y - bullet.y)*(asteroid.y - bullet.y)) > asteroid.R
@@ -237,6 +237,7 @@ function render() {
       }
     }
 
+    //enemy - bulletsFriend
     function checkCollisionBulletEnemy(Enemy, bullet) {
       // verifica colisão entre 1 inimigo e 1 bala
       if (Math.sqrt((Enemy.x - bullet.x)*(Enemy.x - bullet.x) + (Enemy.y - bullet.y)*(Enemy.y - bullet.y)) > Enemy.R
@@ -261,6 +262,7 @@ function render() {
       }
     }
 
+    // asteroids - ship
     function checkCollisionShipAsteroids(asteroid, ship) {
       // verifica colisão entre 1 inimigo e 1 bala
       if (Math.sqrt((asteroid.x - (ship.x))*(asteroid.x - ship.x) + (asteroid.y - ship.y)*(asteroid.y - ship.y)) - 15 > asteroid.R
@@ -279,6 +281,7 @@ function render() {
       }
     }
 
+    //enemy - ship
     function checkCollisionShipEnemy(enemy, ship) {
       // verifica colisão entre 1 inimigo e 1 bala
       if (Math.sqrt((enemy.x - (ship.x))*(enemy.x - ship.x) + (enemy.y - ship.y)*(enemy.y - ship.y)) - 15 > enemy.R
@@ -295,6 +298,26 @@ function render() {
             enemyShip[i].state = "dead";
           }
       }
+    }
+
+    //ship - bulletsEnemy
+    function checkCollisionShipBulletEnemy(ship, bullet) {
+      // verifica colisão entre 1 inimigo e 1 bala
+      if (Math.sqrt((ship.x - bullet.x)*(ship.x - bullet.x) + (ship.y - bullet.y)*(ship.y - bullet.y)) -15> Enemy.R
+      ) {
+        return false;
+      }
+      return true;
+    }
+
+    function checkCollisionsShipBulletsEnemy() {
+        //percorre o array de balas 
+        for (let i = 0; i < enemyShip.bullets.length; i++)
+          if (checkCollisionShipBulletEnemy(ship, enemyShip.bullets[j])) {
+            //sinaliza futura remoção da bala
+            enemyShip.bullets[j].state = "dead";
+            ship.state = ship.state - 1;
+        }
     }
 
     //CONTROL ship USING KEYS
