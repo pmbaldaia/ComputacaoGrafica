@@ -60,12 +60,12 @@ let ship = new Ship(W / 2, H / 2, `rgb(255,255,255)`, ctx, W, H)
 function render() {
 
   let background = new Image();
-  background.src = "../assets/img/galaxy.jpg";
+  background.src = "../img/galaxy.jpg";
   background.onload = function () {
     ctx.drawImage(background, 0, 0);
   }
 
-  ctx.fillStyle = "rgba(211,211,211)"
+  ctx.fillStyle = "rgba(19,19,19,0.00001)"
   ctx.fillRect(0, 0, W, H);
 
   //verify lives and level
@@ -202,7 +202,6 @@ function createEnemyShipBullets() {
         enemyShip[i].orientation = enemyShip[i].orientation + 90
       }
     }
-    console.log('shot');
   }
 }
 
