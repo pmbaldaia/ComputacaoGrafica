@@ -60,7 +60,7 @@ let ship = new Ship(W / 2, H / 2, `rgb(255,255,255)`, ctx, W, H)
 function render() {
 
   let background = new Image();
-  background.src = "../img/galaxy.jpg";
+  background.src = "../img/galaxy.png";
   background.onload = function () {
     ctx.drawImage(background, 0, 0);
   }
