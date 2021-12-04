@@ -76,7 +76,7 @@ function render() {
   checkCollisionsBulletsEnemy();
   checkCollisionsShipsAsteroids();
   checkCollisionsShipsEnemy();
-
+  checkCollisionsShipBulletsEnemy();
 
   //verify if ship has lives
   if (ship.state >= 0) {
@@ -178,8 +178,7 @@ function render() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = 'bold 40px Revamped';
-    ctx.fillText("PERDEU!", W / 2, H / 3);
-    ctx.fillText("PRESSIONE ENTER PARA VOLTAR AO INICIO", W / 2, H / 2);
+    ctx.fillText("YOU LOST", W / 2, H / 2);
   }
 
   spaceTimer++
@@ -196,7 +195,6 @@ function createEnemyShipBullets() {
   if (enemyShip.length > 0) {
     for (let i = 0; i < enemyShip.length; i++) {
       enemyShip[i].createEnemyBullet();
-      console.log(enemyShip[i].orientation);
       if (enemyShip[i].orientation == 360) {
         enemyShip[i].orientation = 0
       } else {
@@ -205,7 +203,6 @@ function createEnemyShipBullets() {
     }
   }
 }
-
 
 //set score and level
 function score() {
@@ -218,14 +215,15 @@ function score() {
   ctx.fillText(vidas, 5, 5);
   ctx.fillText(nivel, 5, 25);
 }
-
 //set collisions
+//asteroids - bulletsFriend
 function checkCollisionBulletAsteroids(asteroid, bullet) {
   // verifica colisão entre 1 inimigo e 1 bala
   if (Math.sqrt((asteroid.x - bullet.x) * (asteroid.x - bullet.x) + (asteroid.y - bullet.y) * (asteroid.y - bullet.y)) > asteroid.R) {
     return false;
+  } else {
+    return true;
   }
-  return true;
 }
 
 function checkCollisionsBulletsAsteroids() {
@@ -243,6 +241,7 @@ function checkCollisionsBulletsAsteroids() {
   }
 }
 
+//enemy - bulletsFriend
 function checkCollisionBulletEnemy(Enemy, bullet) {
   // verifica colisão entre 1 inimigo e 1 bala
   if (Math.sqrt((Enemy.x - bullet.x) * (Enemy.x - bullet.x) + (Enemy.y - bullet.y) * (Enemy.y - bullet.y)) > Enemy.R) {
@@ -266,12 +265,15 @@ function checkCollisionsBulletsEnemy() {
   }
 }
 
+// asteroids - ship
 function checkCollisionShipAsteroids(asteroid, ship) {
   // verifica colisão entre 1 inimigo e 1 bala
   if (Math.sqrt((asteroid.x - (ship.x)) * (asteroid.x - ship.x) + (asteroid.y - ship.y) * (asteroid.y - ship.y)) - 15 > asteroid.R) {
     return false;
+  } else {
+    return true;
   }
-  return true;
+
 }
 
 function checkCollisionsShipsAsteroids() {
@@ -283,6 +285,7 @@ function checkCollisionsShipsAsteroids() {
   }
 }
 
+//enemy - ship
 function checkCollisionShipEnemy(enemy, ship) {
   // verifica colisão entre 1 inimigo e 1 bala
   if (Math.sqrt((enemy.x - (ship.x)) * (enemy.x - ship.x) + (enemy.y - ship.y) * (enemy.y - ship.y)) - 15 > enemy.R) {
@@ -297,6 +300,27 @@ function checkCollisionsShipsEnemy() {
       ship.state = ship.state - 1;
       enemyShip[i].state = "dead";
     }
+  }
+}
+
+//ship - bulletsEnemy
+function checkCollisionShipBulletEnemy(ship, bullet) {
+  if (Math.sqrt((bullet.x - ship.x) * (bullet.x - ship.x) + (bullet.y - ship.y) * (bullet.y - ship.y)) > ship.r) {
+    ;
+    return false;
+  } else {
+    return true;
+  }
+
+}
+
+function checkCollisionsShipBulletsEnemy() {
+  for (let i = 0; i < enemyShip.length; i++) {
+    for (let j = 0; j < enemyShip[i].bullets.length; j++)
+      if (checkCollisionShipBulletEnemy(ship, enemyShip[i].bullets[j])) {
+        enemyShip[i].bullets[j].state = "dead";
+        ship.state = ship.state - 1;
+      }
   }
 }
 
