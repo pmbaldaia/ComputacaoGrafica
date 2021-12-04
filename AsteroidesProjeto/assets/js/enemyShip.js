@@ -1,4 +1,4 @@
-export default class EnemyShip{
+export default class EnemyShip {
     constructor(x, y, r, d, c, v, ctx, W, H) { // CONSTRUCTOR
         this.x = x; // initial X position
         this.y = y; // initial Y position
@@ -19,7 +19,7 @@ export default class EnemyShip{
     draw() {
         this.ctx.strokeStyle = "red";
         this.ctx.save()
-        this.ctx.translate(this.x,this.y)
+        this.ctx.translate(this.x, this.y)
         this.ctx.beginPath();
         this.ctx.arc(0, 0, 10, 0, 1 * Math.PI, true)
         this.ctx.lineTo(-25, 5)
@@ -48,52 +48,52 @@ export default class EnemyShip{
 
     updateEnemyBullets() {
         for (let i = 0; i < this.bullets.length; i++) {
-          this.bullets[i].y -= this.bullets[i].directionY * 5;        // problem: moves along wiht the ship 
-          this.bullets[i].x += this.bullets[i].directionX * 5;
-          if (this.bullets[i].y < 0 || this.bullets[i].y > this.H || this.bullets[i].x < 0 || this.bullets[i].x > this.W  || this.bullets[i].state == "dead") {
-            this.bullets.splice(i, 1);  // remove bala se esta atingir o topo do Canvas
-            i--;
-          }
+            this.bullets[i].y -= this.bullets[i].directionY * 5; // problem: moves along wiht the ship 
+            this.bullets[i].x += this.bullets[i].directionX * 5;
+            if (this.bullets[i].y < 0 || this.bullets[i].y > this.H || this.bullets[i].x < 0 || this.bullets[i].x > this.W || this.bullets[i].state == "dead") {
+                this.bullets.splice(i, 1); // remove bala se esta atingir o topo do Canvas
+                i--;
+            }
         }
     }
 
     createEnemyBullet() {
         // acrescenta uma nova bala no array de balas, apartir da posição do player
         this.bullets.push({
-          x: this.x,
-          y: this.y,
-          w: 4,
-          h: 4,
-          directionY: Math.cos(this.orientation),
-          directionX: Math.sin(this.orientation),
-          state: 'alive'
+            x: this.x,
+            y: this.y,
+            w: 4,
+            h: 4,
+            directionY: Math.cos(this.orientation * Math.PI / 180),
+            directionX: Math.sin(this.orientation * Math.PI / 180),
+            state: 'alive'
         });
     }
 
     drawEnemyBullets() {
         // desenha todas as balas
         for (let i = 0; i < this.bullets.length; i++) {
-          // console.log(this.bullets[i])
-          this.ctx.fillStyle = "red";
-          this.ctx.fillRect(this.bullets[i].x, this.bullets[i].y, this.bullets[i].w, this.bullets[i].h);
+            // console.log(this.bullets[i])
+            this.ctx.fillStyle = "red";
+            this.ctx.fillRect(this.bullets[i].x, this.bullets[i].y, this.bullets[i].w, this.bullets[i].h);
         }
     }
 
     update() {
         this.y += this.dY; // update vertical position
-        if (this.y > this.H - (this.y+50/2) + this.R*2){
-            this.y = this.y - (this.H + this.R*2)
+        if (this.y > this.H - (this.y + 50 / 2) + this.R * 2) {
+            this.y = this.y - (this.H + this.R * 2)
         }
-        if (this.y < -(this.y+50/2) - this.R*2){
-            this.y = this.y + (this.H + this.R*2)
+        if (this.y < -(this.y + 50 / 2) - this.R * 2) {
+            this.y = this.y + (this.H + this.R * 2)
         }
         this.x += this.dX; // update horizontal position
-        if (this.x > this.W - (this.x+(-20+25)/2) + this.R*2){
-            this.x = this.x - (this.W + this.R*2)
+        if (this.x > this.W - (this.x + (-20 + 25) / 2) + this.R * 2) {
+            this.x = this.x - (this.W + this.R * 2)
         }
-        if (this.x < - (this.x+(-20+25)/2) -this.R*2){
-            this.x = this.x + (this.W + this.R*2)
-        }  
+        if (this.x < -(this.x + (-20 + 25) / 2) - this.R * 2) {
+            this.x = this.x + (this.W + this.R * 2)
+        }
         this.angle = this.angle + 1
     }
 }
