@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html onload="window.open();">
 <html lang="en">
 
 <head>
@@ -9,14 +9,16 @@
 
 </head>
 
-<body onload="window.open();">
+<body>
   <div class="body">
     <div class="buttons">
       <h1>ASTEROIDES</h1>
       <button class="game" onclick="location.href='./assets/html/game.html'">Jogar</button>
+      <button class="game" onclick="location.href='./assets/html/credits.html'">Creditos</button>
       <button type="button" class="game" onclick="window.close();">Sair</button>
     </div>
   </div>
+  <script src="assets/js/asteroid.js"></script>
   <script src="script.js"></script>
   <script type="text/javascript">
     window.close();
