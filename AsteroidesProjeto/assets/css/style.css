@@ -7,13 +7,17 @@ body {
     color: #fff;
     background-image: url(../img/galaxy.png);
     opacity: 0.9;
-    font: 1.5em "Revamped";
+    font: 1em "Revamped";
     justify-content: center;
     align-content: center;
     align-items: center;
     text-align: center;
     min-height: 100vh;
     display: flex;
+}
+
+h1{
+  font-size: 75px;
 }
 #myCanvas {
     position: absolute;

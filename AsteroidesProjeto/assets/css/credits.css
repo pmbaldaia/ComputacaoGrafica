@@ -76,6 +76,7 @@ h3 span:first-child {
 h3 span:last-child {
   color: rgb(223, 247, 255);
   animation-delay: 7.5s;
+  animation-iteration-count: infinite;
 }
 
 
