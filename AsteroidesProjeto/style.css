@@ -1,0 +1,63 @@
+
+body {
+    margin: 0;
+    padding: 0;
+}
+.body{
+    color: #fff;
+    background-image: url(img/galaxy.jpg);
+    opacity: 0.9;
+    font: 1.5em "Revamped";
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+}
+#myCanvas {
+    position: absolute;
+    overflow: hidden;
+    opacity: 90%;
+}
+
+.game:hover,
+.game:focus {
+  -webkit-animation: game 1s;
+          animation: game 1s;
+  box-shadow: 0 0 0 2em rgba(255, 255, 255, 0);
+}
+
+@-webkit-keyframes game {
+  0% {
+    box-shadow: 0 0 0 0 var(--hover);
+  }
+}
+
+@keyframes game {
+  0% {
+    box-shadow: 0 0 0 0 var(--hover);
+  }
+}
+
+.game {
+  --color: red;
+  --hover: lightblue;
+}
+button {
+  color: var(--color);
+  transition: 0.25s;
+}
+button:hover, button:focus {
+  border-color: var(--hover);
+  color: #fff;
+}
+
+button {
+  background: none;
+  border: 2px solid;
+  font: inherit;
+  line-height: 1;
+  margin: 0.5em;
+  padding: 1em 2em;
+}
