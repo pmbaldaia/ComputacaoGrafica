@@ -74,11 +74,10 @@ h3 span:first-child {
   animation-delay: 7.7s;
 }
 h3 span:last-child {
-  color: rgb(223, 247, 255);
+  color: white;
   animation-delay: 7.5s;
   animation-iteration-count: infinite;
 }
-
 
 .usefull {
   font-size: 10px;
