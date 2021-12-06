@@ -248,7 +248,7 @@ function render() {
                 let velocity = 1 + Math.random() * (1);
                 //rotation 
                 let angle = 0
-                //rotation side
+                //rotation sid
                 let rotationSide = Math.random() > 0.5 ? 1 : -1
                 let L = 2
                 console.log('two');
