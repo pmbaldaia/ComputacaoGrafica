@@ -26,7 +26,7 @@ export default class Asteroid {
     this.ctx.lineTo(-5/this.L,-40/this.L)
     this.ctx.lineTo(-30/this.L,-30/this.L)
     this.ctx.lineTo(-30/this.L,-25/this.L)
-    this.ctx.lineTo(-45/this.L,0/this.L)
+    this.ctx.lineTo(-45/this.L,0)
     this.ctx.lineTo(-25/this.L,10/this.L)
     this.ctx.lineTo(-40/this.L,20/this.L)
     this.ctx.lineTo(-30/this.L,35/this.L)
