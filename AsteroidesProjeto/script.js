@@ -71,7 +71,7 @@ function render() {
 
   /*   document.body.style.backgroundImage = "url('../img/galaxy.png')";
    */
-  ctx.fillStyle = "rgba(19,19,19)"
+  ctx.fillStyle = "rgba(19,19,19,1)";
   ctx.fillRect(0, 0, W, H);
   //verify lives and level
   score();
