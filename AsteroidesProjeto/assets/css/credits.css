@@ -64,7 +64,7 @@ h2 span:last-child {
 }
 
 h3{
-  margin-left: 1.1ch;
+  margin-left: 0.3ch;
   position: absolute;
 }
 h3 span {
@@ -72,12 +72,14 @@ h3 span {
 }
 h3 span:first-child {
   animation-delay: 7.7s;
+  animation-iteration-count: infinite;
 }
 h3 span:last-child {
   color: white;
   animation-delay: 7.5s;
   animation-iteration-count: infinite;
 }
+
 
 .usefull {
   font-size: 10px;

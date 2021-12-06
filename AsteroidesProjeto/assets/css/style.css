@@ -65,3 +65,30 @@ button {
   margin: 0.5em;
   padding: 1em 2em;
 }
+
+svg {
+  animation-name: asteroid;
+  animation-duration: 15.5s;
+  /* Things added */
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+  display: inline-block;
+  /* <--- */
+}
+
+@keyframes asteroid {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.a {
+  fill: none;
+  stroke: red;
+  stroke-miterlimit: 10;
+  stroke-width: 2px;
+}
