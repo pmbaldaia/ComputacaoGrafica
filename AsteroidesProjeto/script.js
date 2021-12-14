@@ -10,8 +10,8 @@ canvas.height = window.innerHeight;
 const W = canvas.width,
   H = canvas.height;
 
-let interval = '';
-let spaceTimer = 20
+let interval = ''; //balas inimigos
+let spaceTimer = 20 //tempo entre cada bala 
 let invulnerable = 100
 
 // setup asteroids
@@ -20,7 +20,7 @@ for (let i = 0; i < 5; i++) {
 
   let color = `rgb(255,255,255)`; // randomcolor
   // randomposition (inside Canvas)
-  let xInit = 20 + Math.random() * (W - 2 * 20);
+  let xInit = 20 + Math.random() * (W - 2 * 20); //posição
   let yInit = 20 + Math.random() * (H - 2 * 20);
   // randomdirection
   let direction = Math.random() * 2 * Math.PI;
@@ -90,7 +90,7 @@ function render() {
   }
   ship.update();
 
-  //check if asteroids are alive
+  //destruir asteroid
   if (asteroids.length > 0) {
     for (let i = 0; i < asteroids.length; i++) {
       if (asteroids[i].state == "alive") {
@@ -104,7 +104,7 @@ function render() {
     }
   }
 
-  //check if enemies are alive
+  //destrui nave inimiga
   if (enemyShip.length > 0) {
     for (let i = 0; i < enemyShip.length; i++) {
       if (enemyShip[i].state == "alive") {
@@ -119,7 +119,6 @@ function render() {
       }
     }
   }
-
 
   //desenhar e atualizar balas do ship
   ship.drawBullets();
