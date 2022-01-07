@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Basic ThreeJS APP</title>
+    <style>
+        body {
+            /* set margin to 0 and overflow to hidden, to use the complete page */
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HTML body will hold the Output -->
+    <script type="module">
+        import * as THREE from './libs/three.module.js';
+
+        let camera, sceneVertical, renderer;
+        let cube;
+
+        // once everything is loaded, we run our Three.js stuff
+        window.onload = function init() {
+
+            
+            /*********************
+             * SCENE 
+             * *******************/
+            // create an empty scene, that will hold all our elements such as objects, cameras and lights
+            sceneVertical = new THREE.Scene();
+
+
+            /***********************  
+            CAMERA 
+            ***********************/
+            // create a camera, which defines where we're looking at
+            const aspect = window.innerWidth / window.innerHeight;
+            camera = new THREE.PerspectiveCamera(80, aspect, 0.1, 15);
+            camera.position.x = 6;
+            camera.position.y = 4;
+            camera.position.z = 0;
+            camera.lookAt(sceneVertical.position); //point the camera to the center of the scene
+
+
+            /*********************
+             * RENDERER 
+             * *******************/
+            // create a render and set the size
+            renderer = new THREE.WebGLRenderer({ antialias: false }); // aliasing (jagged edges when rendering)
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            // configure renderer clear color
+            renderer.setClearColor("#FCCA46");
+
+            // add the output of the renderer to an HTML element (this case, the body)
+            document.body.appendChild(renderer.domElement);
+
+            /*********************
+            * LIGHTS 
+            *********************/
+            let light = new THREE.AmbientLight(0xffffff, 0.5);
+            sceneVertical.add(light);
+
+            let light2 = new THREE.PointLight(0xffffff, 1);
+            light2.position.set(8, 4, 0);
+            sceneVertical.add(light2);
+
+
+            /*****************************
+             * MESH = GEOMETRY + MATERIAL 
+             * ***************************/
+            // create an object 3D - a cube
+            let geometry = new THREE.BoxGeometry(2, 4, 2);
+            let material = new THREE.MeshPhongMaterial({ wireframe: false });
+            cube = new THREE.Mesh(geometry, material);
+            // add the cube to the scene
+            sceneVertical.add(cube);
+
+
+            // Create a plane 
+            let planeGeometry = new THREE.PlaneBufferGeometry(10000, 10000, 32, 32);
+            let planeMaterial = new THREE.MeshLambertMaterial({ color: 0xFFD15C, side: THREE.DoubleSide });
+            let plane = new THREE.Mesh(planeGeometry, planeMaterial);
+            plane.name = "plane"
+            plane.rotation.x = - Math.PI / 2;
+            plane.position.y = -1;
+            sceneVertical.add(plane);
+
+
+            /*************************
+            * AXES HELPER
+            *************************/
+            // // show axes for the WORLD CS
+            // let axes = new THREE.AxesHelper(4);
+            // scene.add(axes);
+            // // show smaller axes for the CUBE CS
+            // let axesCube = new THREE.AxesHelper(2);
+            // cube.add(axesCube);
+        
+
+            /*****************************
+             * ANIMATE 
+             * ***************************/
+            // set the animation function
+            renderer.setAnimationLoop(render);
+         }
+
+
+        function render() {
+
+
+            if (cube.position.x < 10){
+                cube.position.x += 0.2
+            } else if (cube.position.x >= 10) {
+                cube.position.x = -15
+                cube.position.y = -8
+                if (cube.position.z == 0){
+                    cube.position.z = Math.random() > 0.5 ? 2 : -2
+                } else if (cube.position.z == 2) {
+                    cube.position.z = Math.random() > 0.5 ? 0 : -2
+                } else if (cube.position.z == -2) {
+                    cube.position.z = Math.random() > 0.5 ? 0 : 2
+                }
+            }
+
+            console.log(cube.position.z);
+            if (cube.position.y < 0)
+                cube.position.y += 0.2
+
+                
+            console.log(cube.position);
+            // render the scene into viewport using the camera
+            if (right == true){
+            renderer.render(sceneVertical, camera);}
+        }
+
+    </script>
+</body>
+
+</html>
