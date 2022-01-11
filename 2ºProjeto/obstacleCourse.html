@@ -91,7 +91,7 @@
             /*************************
             * AXES HELPER
             *************************/
-            // // show axes for the WORLD CS
+            // show axes for the WORLD CS
             // let axes = new THREE.AxesHelper(4);
             // scene.add(axes);
             // // show smaller axes for the CUBE CS
@@ -109,7 +109,7 @@
 
         function render() {
 
-
+            //moving cube
             if (cube.position.x < 10){
                 cube.position.x += 0.2
             } else if (cube.position.x >= 10) {
@@ -123,8 +123,6 @@
                     cube.position.z = Math.random() > 0.5 ? 0 : 2
                 }
             }
-
-            console.log(cube.position.z);
             if (cube.position.y < 0)
                 cube.position.y += 0.2
 
