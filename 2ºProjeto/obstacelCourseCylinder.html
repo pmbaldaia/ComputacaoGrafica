@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>The Aviator: Part 3</title>
+    <title>THE SKATER</title>
     <style>
         .world {
             position: absolute;
@@ -30,6 +30,7 @@
 
         // THREEJS RELATED VARIABLES
         let scene, renderer, camera;
+        let timer = 90;
 
         // 3D Models
         let land, sky
@@ -70,8 +71,8 @@
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
             // position the camera
             camera.position.x = 0;
-            camera.position.z = 200;
-            camera.position.y = 100;
+            camera.position.z = 700;
+            camera.position.y = 50;
 
             // create a render and set the size
             renderer = new THREE.WebGLRenderer();
@@ -86,6 +87,7 @@
             // listen to the screen: if the user resizes it we have to update the camera and the renderer size
             window.addEventListener('resize', handleWindowResize, false);
         }
+        
         function handleWindowResize() {
             // update height and width of the renderer and the camera
             const HEIGHT = window.innerHeight;
@@ -94,12 +96,14 @@
             camera.aspect = WIDTH / HEIGHT;
             camera.updateProjectionMatrix();
         }
+        
         function createSkater() {
             skate = new THREE.Group();
 
         //     console.log("Skate created");
         //     scene.add(skate)
         }
+        
         function createSky() {
             // create an empty container
             sky = new THREE.Object3D();
@@ -109,6 +113,7 @@
             console.log("Sky created")
             scene.add(sky);
         }
+        
         function createLights() {
             // Add an hemisphere light (gradient colored light)
             // Parameters: sky color - 0xaaaaaa, ground color - 0x000000, intensity - 0.9
@@ -123,17 +128,18 @@
             light2.position.set(800, 400, 0);
             scene.add(light2);
         }
+        
         function createLand() {
             // create the geometry (shape) of the cylinder: 
             // parameters are: radius top, radius bottom, height, number of segments on the radius, number of segments vertically
-            let geometry = new THREE.CylinderGeometry(600, 600, 800, 40, 10);
+            let geometry = new THREE.CylinderGeometry(600, 600, 1800, 40, 10);
             // rotate the geometry on the x axis (local transformation)
             geometry.rotateZ(-Math.PI / 2);
 
             // create the material
             let material = new THREE.MeshLambertMaterial({
                 color: 0xFFD15C,
-                transparent: true,
+                transparent: false,
                 opacity: .6
             });
 
@@ -143,16 +149,50 @@
             // push it a little bit at the bottom of the scene
             land.position.y = -600;
 
+            // create the clouds and add them to the sky mesh
+
+            let cube = new THREE.CylinderGeometry(200,100,200,40,10);
+
+            //terceiro
+            let obstacle = new THREE.Mesh(cube,material);
+            obstacle.position.y = -550
+
+            //primeiro
+            let obstacle2 = new THREE.Mesh(cube,material);
+            obstacle2.position.y = 550
+            obstacle2.rotateZ(-Math.PI)
+
+            //quarto
+            let obstacle3 = new THREE.Mesh(cube,material);
+            obstacle3.position.z = 550
+            obstacle3.rotateX(-Math.PI/2)
+
+            //segundo
+            let obstacle4 = new THREE.Mesh(cube,material);
+            obstacle4.position.z = -550
+            obstacle4.rotateX(-Math.PI/2*3)
+
+
+
+            land.add(obstacle, obstacle2, obstacle3, obstacle4);
+
+
             console.log("Land created")
             scene.add(land);
         }
+        
         function render() {
             // // rotate the background (use AxisHelper to verify which axis is the rotation one)
-            land.rotation.x += 0.002;
+            
+            land.rotation.x += 0.0101;
+            timer += 1
 
-            // update skater position - light will follow the skater
-            //updateSkater();
 
+            if(timer == 190){
+                Math.random() > 0.25 ? changePlace() : timer = 35
+            }
+            console.log(land.rotation.x);
+            console.log(timer);
             // render
             renderer.render(scene, camera);
         }
@@ -163,7 +203,7 @@
             mousePos = { x: tx, y: ty };
         }
 
-        function updatePlane() {
+        function updateSkater() {
             let targetX = mousePos.x * 100;
             let targetY = mousePos.y * 100;
 
@@ -174,6 +214,20 @@
             // // update the airplane's position SMOOTHLY
             // plane.position.y += (targetY - plane.position.y + 100) * 0.1;
             // plane.rotation.z = (targetY - plane.position.y + 100) * 0.013;
+        }
+    
+
+        function changePlace(){
+
+
+            if (land.position.x == 0){
+                land.position.x = Math.random() > 0.5 ? 200 : -200
+            } else if (land.position.x == 200) {
+                land.position.x = Math.random() > 0.5 ? 0 : -200
+            } else if (land.position.x == -200) {
+                land.position.x = Math.random() > 0.5 ? 0 : 200
+            }
+            timer = 35
         }
     </script>
 </body>
