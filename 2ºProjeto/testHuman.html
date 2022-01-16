@@ -31,7 +31,7 @@
         leftShoulderPivot, leftElbowPivot;
         
         //movement & collision verifications
-        let breakSnowman, goingRight, goingLeft;
+        let breakSnowman, goingRight, goingLeft, bbHelper;
         let keyAllowed = true;
         let timer = 0;        
         // once everything is loaded, we run our Three.js stuff
@@ -47,10 +47,13 @@
 
             // add the lights
             createLights();
-            /*****************************
-             * ANIMATE 
-             * ***************************/
             
+            // just for visualization purposes (NOT required for collisions)
+            snowboard.geometry.computeBoundingBox();
+			bbHelper = new THREE.BoxHelper(snowboard, 0x00FFFF);
+			scene.add(bbHelper); // adds AABB to the scene
+
+
             // set the animation function
             renderer.setAnimationLoop(render);
         }
@@ -90,7 +93,6 @@
             camera.aspect = WIDTH / HEIGHT;
             camera.updateProjectionMatrix();
         }
-
         
         function createSnowman(){
 
@@ -174,7 +176,6 @@
             let footGeometry = new THREE.BoxGeometry(40,25,10);
             let greyMaterial = new THREE.MeshLambertMaterial({color: 0x918d8d, side: THREE.DoubleSide});
 
-
             /*leftFoot*/
             let leftFoot = new THREE.Mesh(footGeometry,greyMaterial)
             leftFoot.position.y = -20
@@ -206,7 +207,6 @@
             leftKnee.add(upperLeftLeg)
 
             
-
             /*rightFoot*/
             let rightFoot = new THREE.Mesh(footGeometry,greyMaterial)
             rightFoot.position.y = 20
@@ -262,7 +262,6 @@
             torsoPivot.add(upperTorso)
 
 
-
             /*neck pivot*/
             neckPivot = new THREE.Object3D();
             neckPivot.position.z = 35
@@ -296,7 +295,6 @@
             headpivot.add(helmet)
 
 
-
             /*right shoulder pivot*/
             rightShoulderPivot = new THREE.Object3D();
             rightShoulderPivot.position.y = 35
@@ -324,7 +322,6 @@
             rightElbowPivot.add(rightLowerArm)
 
 
-
             /*left shoulder pivot*/
             leftShoulderPivot = new THREE.Object3D();
             leftShoulderPivot.position.y = -35
@@ -349,8 +346,6 @@
             let leftLowerArm = new THREE.Mesh(armGeometry,skinMaterial)
             leftLowerArm.position.z = -25
             leftElbowPivot.add(leftLowerArm)
-
-            
         }
 
         function createLights(){
@@ -377,46 +372,27 @@
 
         function render() {
 
-            
-            //moving bottomBall
-             if (snowmanBottom.position.x < 1450){
+            if(!checkCollisions()){
+                //moving bottomBall
+            if (snowmanBottom.position.x < 1450){
                 snowmanBottom.position.x += 10
-             } else if (snowmanBottom.position.x >= 10) {
+            } else if (snowmanBottom.position.x >= 10) {
                 snowmanBottom.position.x = -1100
                 snowmanBottom.position.y = -220
-                 if (snowmanBottom.position.z == 0){
+                if (snowmanBottom.position.z == 0){
                     snowmanBottom.position.z = Math.random() > 0.5 ? 300 : -300
-                 } else if (snowmanBottom.position.z == 300) {
+                } else if (snowmanBottom.position.z == 300) {
                     snowmanBottom.position.z = Math.random() > 0.5 ? 0 : -300
-                 } else if (snowmanBottom.position.z == -300) {
+                } else if (snowmanBottom.position.z == -300) {
                     snowmanBottom.position.z = Math.random() > 0.5 ? 0 : 300
-                 }
-             }
+                }
+            }
 
-             if(snowmanBottom.position.x > 750){
+            if(snowmanBottom.position.x > 750){
                 snowmanBottom.position.y -= 5    
-             } else if (snowmanBottom.position.x < 850 && snowmanBottom.position.y < 40){
+            } else if (snowmanBottom.position.x < 850 && snowmanBottom.position.y < 40){
                 snowmanBottom.position.y += 5
             }
-
-
-            
-            if(breakSnowman == true){
-
-                if(snowmanBottom.rotation.x < Math.PI/2){
-                    snowmanBottom.rotation.x +=0.04
-                    snowmanBottom.rotation.z -=0.01
-                }   
-                if(snowmanBottom.rotation.x > Math.PI/4 && pivotMiddleBottom.position.y < 110){
-                    pivotMiddleBottom.position.y += 1
-                    pivotMiddleBottom.rotation.x += 0.01
-                }
-                if(snowmanBottom.rotation.x > Math.PI/3 && pivotTopMiddle.position.y < 140){
-                    pivotTopMiddle.position.y += 1
-                }
-
-            }
-
 
             if(goingRight == true && snowboard.position.z > -300){
                 snowboard.position.z -= 5
@@ -449,23 +425,40 @@
                 goingLeft = false
                 keyAllowed = true
                 timer = 0
+                }
+            }
+
+            if(breakSnowman == true){
+
+                if(snowmanBottom.rotation.x < Math.PI/2){
+                    snowmanBottom.rotation.x +=0.04
+                    snowmanBottom.rotation.z -=0.01
+                }   
+                if(snowmanBottom.rotation.x > Math.PI/4 && pivotMiddleBottom.position.y < 110){
+                    pivotMiddleBottom.position.y += 1
+                    pivotMiddleBottom.rotation.x += 0.01
+                }
+                if(snowmanBottom.rotation.x > Math.PI/3 && pivotTopMiddle.position.y < 140){
+                    pivotTopMiddle.position.y += 1
+                }
             }
             
+            //UPDATE BBOX HELPER
+			bbHelper.update();
 
             // render the scene into viewport using the camera
             renderer.render(scene, camera);
         }
 
         function checkCollisions() {
-			let tankBox = new THREE.Box3().setFromObject(tank.base);
-			for (let i = 0; i < walls.length; i++) {
-				let obstBox = new THREE.Box3().setFromObject(walls[i]);
-				let collision = tankBox.intersectsBox(obstBox);
-				if (collision) {
-					// console.log("HIT")
-					return true;
-				}
+			let snowboarderBox = new THREE.Box3().setFromObject(snowboard);
+			let obstacleSnow = new THREE.Box3().setFromObject(snowmanBottom);
+			let collision = snowboarderBox.intersectsBox(obstacleSnow);
+			if (collision) {
+                breakSnowman = true
+				return true;
 			}
+			
 			return false;
 		}
 
