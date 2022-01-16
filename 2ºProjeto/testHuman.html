@@ -21,6 +21,8 @@
         let camera, scene, renderer;
         let pivotMiddleBottom,pivotTopMiddle, snowmanBottom;
 
+        let snowboard;
+        let breakSnowman;
         
         // once everything is loaded, we run our Three.js stuff
         window.onload = function init() {
@@ -31,6 +33,7 @@
             // add the objects
             createLand();
             createSnowman();
+            createSnowboarder();
 
             // add the lights
             createLights();
@@ -49,9 +52,9 @@
             
             // create a camera, which defines where we're looking at
             const aspect = window.innerWidth / window.innerHeight;
-            camera = new THREE.PerspectiveCamera(60, aspect, 1, 1500);
-            camera.position.x = 1200;
-            camera.position.y = 300;
+            camera = new THREE.PerspectiveCamera(60, aspect, 1, 2000);
+            camera.position.x = 1400;
+            camera.position.y = 400;
             camera.position.z = 0;
             camera.lookAt(scene.position); //point the camera to the center of the scene
 
@@ -78,6 +81,7 @@
             camera.updateProjectionMatrix();
         }
 
+        
         function createSnowman(){
 
             /*base Snowman*/
@@ -108,6 +112,144 @@
             pivotTopMiddle.add(snowmanTop);
         }
         
+        function createSnowboarder(){
+
+            /*snowboard*/
+            /*mainbase*/
+            let snowboardGeometry = new THREE.PlaneGeometry(40,200, 32,32);
+            let blackMaterial = new THREE.MeshLambertMaterial({color: 0x2A2C2F, side: THREE.DoubleSide});
+            snowboard = new THREE.Mesh(snowboardGeometry, blackMaterial);
+            snowboard.position.x = 750
+            snowboard.position.z = 0
+            snowboard.rotation.z =  Math.PI / 4;
+            snowboard.rotation.x = - Math.PI / 2;
+            scene.add(snowboard)
+
+            /*frontBendBoard*/
+            let frontBackBendBoardGeometry = new THREE.CylinderGeometry( 40, 40, 40, 8, 1,0,0,0.8 );
+            let frontBendBoard = new THREE.Mesh( frontBackBendBoardGeometry, blackMaterial );
+            frontBendBoard.position.y = -100;
+            frontBendBoard.position.z = 40;
+            frontBendBoard.rotation.z = Math.PI / 2;
+            frontBendBoard.rotation.x = Math.PI;            
+            snowboard.add( frontBendBoard );
+
+            /*frontEndBoard*/
+            let frontBackEndBoardGeometry = new THREE.CircleGeometry( 20,32,0,3);
+            let frontEndBoard = new THREE.Mesh( frontBackEndBoardGeometry, blackMaterial );
+            frontEndBoard.rotation.z = -Math.PI/2;
+            frontEndBoard.rotation.y = Math.PI/4;
+            frontEndBoard.position.x = 25
+            frontEndBoard.position.z = 32
+            frontBendBoard.add( frontEndBoard );
+
+            /*BackBendBoard*/
+            let backBendBoard = new THREE.Mesh( frontBackBendBoardGeometry, blackMaterial );
+            backBendBoard.position.y = 100;
+            backBendBoard.position.z = 40;
+            backBendBoard.rotation.z = -Math.PI / 2;
+            backBendBoard.rotation.x = Math.PI;            
+            snowboard.add( backBendBoard );
+
+            /*backEndBoard*/
+            let backEndBoard = new THREE.Mesh( frontBackEndBoardGeometry, blackMaterial );
+            backEndBoard.rotation.z = -Math.PI/2;
+            backEndBoard.rotation.y = Math.PI/4;
+            backEndBoard.position.x = 25
+            backEndBoard.position.z = 32
+            backBendBoard.add( backEndBoard );
+
+
+            /*snowboarder*/
+            /*feet basic*/
+            let footGeometry = new THREE.BoxGeometry(40,25,10);
+            let greyMaterial = new THREE.MeshLambertMaterial({color: 0x918d8d, side: THREE.DoubleSide});
+
+
+            /*leftFoot*/
+            let leftFoot = new THREE.Mesh(footGeometry,greyMaterial)
+            leftFoot.position.y = -20
+            leftFoot.position.z = 5
+            snowboard.add(leftFoot)
+
+            /*left ankle*/
+            let leftAnkle = new THREE.Object3D();
+            leftAnkle.position.x = 10
+            leftFoot.add(leftAnkle)
+
+            /*left lower leg*/
+            let legGeometry = new THREE.BoxGeometry(20,30,60);
+            let blueMaterial = new THREE.MeshLambertMaterial({color: 0x01006A, side: THREE.DoubleSide});
+            let lowerLeftLeg = new THREE.Mesh(legGeometry,blueMaterial);
+            lowerLeftLeg.position.z = 30
+            leftAnkle.add(lowerLeftLeg)
+
+            /*left knee*/
+            let leftKnee = new THREE.Object3D();
+            leftKnee.position.z = 25
+            lowerLeftLeg.add(leftKnee)
+            
+            /*left upper leg*/
+            let upperLeftLeg = new THREE.Mesh(legGeometry,blueMaterial);
+            upperLeftLeg.position.z = 25
+            leftKnee.add(upperLeftLeg)
+
+            
+
+            /*rightFoot*/
+            let rightFoot = new THREE.Mesh(footGeometry,greyMaterial)
+            rightFoot.position.y = 20
+            rightFoot.position.z = 5
+            snowboard.add(rightFoot)
+            
+            /*right ankle*/
+            let rightAnkle = new THREE.Object3D();
+            rightAnkle.position.x = 10
+            rightFoot.add(rightAnkle)
+
+            /*right lower leg*/
+            let lowerRightLeg = new THREE.Mesh(legGeometry,blueMaterial);
+            lowerRightLeg.position.z = 30
+            rightAnkle.add(lowerRightLeg)
+
+            /*right knee*/
+            let rightKnee = new THREE.Object3D();
+            rightKnee.position.z = 25
+            lowerRightLeg.add(rightKnee)
+
+            /*left upper leg*/
+            let upperRightLeg = new THREE.Mesh(legGeometry,blueMaterial);
+            upperRightLeg.position.z = 25
+            rightKnee.add(upperRightLeg)
+
+
+            /*hip pivot*/
+            let hipPivot = new THREE.Object3D();
+            hipPivot.position.z = 25
+            upperRightLeg.add(hipPivot)
+
+            /*lowertorso*/
+            let torsoGeometry = new THREE.BoxGeometry(30,80,70)
+            let lowerTorso = new THREE.Mesh(torsoGeometry, blackMaterial)
+            lowerTorso.position.z = 25
+            lowerTorso.position.y = -20
+            hipPivot.add(lowerTorso)
+
+            /*middle torso pivot*/
+            let pivotTorso = new THREE.Object3D();
+            pivotTorso.position.z = 10
+            lowerTorso.add(pivotTorso)
+
+            /*uppertorso*/
+            let upperTorso = new THREE.Mesh(torsoGeometry, blackMaterial)
+            upperTorso.position.z = 50
+            pivotTorso.add(upperTorso)
+
+            /**/
+
+
+        }
+
         function createLights(){
 
             let light = new THREE.AmbientLight(0xffffff, 0.5);
@@ -137,7 +279,7 @@
              if (snowmanBottom.position.x < 1350){
                 snowmanBottom.position.x += 10
              } else if (snowmanBottom.position.x >= 10) {
-                snowmanBottom.position.x = -700
+                snowmanBottom.position.x = -1100
                 snowmanBottom.position.y = -220
                  if (snowmanBottom.position.z == 0){
                     snowmanBottom.position.z = Math.random() > 0.5 ? 300 : -300
@@ -150,19 +292,49 @@
 
              if(snowmanBottom.position.x > 750){
                 snowmanBottom.position.y -= 5    
-             } else if (snowmanBottom.position.x < 850 && snowmanBottom.position.y < 0){
+             } else if (snowmanBottom.position.x < 850 && snowmanBottom.position.y < 40){
                 snowmanBottom.position.y += 5
             }
-            */          
+            */  
 
+            /*
+            if(breakSnowman == true){
 
-            
+                if(snowmanBottom.rotation.x < Math.PI/2){
+                    snowmanBottom.rotation.x +=0.04
+                    snowmanBottom.rotation.z -=0.01
+                }   
+                if(snowmanBottom.rotation.x > Math.PI/4 && pivotMiddleBottom.position.y < 110){
+                    pivotMiddleBottom.position.y += 1
+                    pivotMiddleBottom.rotation.x += 0.01
+                }
+                if(snowmanBottom.rotation.x > Math.PI/3 && pivotTopMiddle.position.y < 140){
+                    pivotTopMiddle.position.y += 1
+                }
+
+            }
+            */
 
             // render the scene into viewport using the camera
             renderer.render(scene, camera);
         }
 
+        /*test movement
+        document.addEventListener("keydown", event => {
+            if (event.key == 's') {
+                breakSnowman = true
+            }
+        })
 
+        document.addEventListener("keyup", event => {
+            if (event.key == 's') {
+                breakSnowman = false
+            }
+        })
+        */
+        
+
+        
     </script>
 </body>
 

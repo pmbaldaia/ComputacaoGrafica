@@ -21,6 +21,8 @@
         let camera, scene, renderer;
         let pivotMiddleBottom,pivotTopMiddle, snowmanBottom;
 
+        let snowboard;
+        let breakSnowman;
         
         // once everything is loaded, we run our Three.js stuff
         window.onload = function init() {
@@ -31,6 +33,7 @@
             // add the objects
             createLand();
             createSnowman();
+            createSnowboarder();
 
             // add the lights
             createLights();
@@ -50,8 +53,8 @@
             // create a camera, which defines where we're looking at
             const aspect = window.innerWidth / window.innerHeight;
             camera = new THREE.PerspectiveCamera(60, aspect, 1, 1500);
-            camera.position.x = 1200;
-            camera.position.y = 300;
+            camera.position.x = 1400;
+            camera.position.y = 400;
             camera.position.z = 0;
             camera.lookAt(scene.position); //point the camera to the center of the scene
 
@@ -107,6 +110,58 @@
             let snowmanTop = new THREE.Mesh(topBall, snow);
             pivotTopMiddle.add(snowmanTop);
         }
+
+        function createSnowboarder(){
+
+            console.log("done");
+            /*snowboard*/
+            let snowboardGeometry = new THREE.PlaneGeometry(40,200, 32,32);
+            let blackMaterial = new THREE.MeshLambertMaterial({color: 0x2A2C2F, side: THREE.DoubleSide});
+            snowboard = new THREE.Mesh(snowboardGeometry, blackMaterial);
+            snowboard.position.x = 750
+            snowboard.position.z = 0
+            snowboard.rotation.z = - Math.PI / 2;
+            snowboard.rotation.x = - Math.PI / 2;
+
+            scene.add(snowboard)
+
+            /*frontBendBoard*/
+            let frontBackBendBoardGeometry = new THREE.CylinderGeometry( 40, 40, 40, 8, 1,0,0,0.8 );
+            let frontBendBoard = new THREE.Mesh( frontBackBendBoardGeometry, blackMaterial );
+            frontBendBoard.position.y = -100;
+            frontBendBoard.position.z = 40;
+            frontBendBoard.rotation.z = Math.PI / 2;
+            frontBendBoard.rotation.x = Math.PI;            
+            snowboard.add( frontBendBoard );
+
+            /*frontEndBoard*/
+            let frontBackEndBoardGeometry = new THREE.CircleGeometry( 20,32,0,3);
+            let frontEndBoard = new THREE.Mesh( frontBackEndBoardGeometry, blackMaterial );
+            frontEndBoard.rotation.z = -Math.PI/2;
+            frontEndBoard.rotation.y = Math.PI/4;
+            frontEndBoard.position.x = 25
+            frontEndBoard.position.z = 32
+            frontBendBoard.add( frontEndBoard );
+
+            /*BackBendBoard*/
+            let backBendBoard = new THREE.Mesh( frontBackBendBoardGeometry, blackMaterial );
+            backBendBoard.position.y = 100;
+            backBendBoard.position.z = 40;
+            backBendBoard.rotation.z = -Math.PI / 2;
+            backBendBoard.rotation.x = Math.PI;            
+            snowboard.add( backBendBoard );
+
+            /*backEndBoard*/
+            let backEndBoard = new THREE.Mesh( frontBackEndBoardGeometry, blackMaterial );
+            backEndBoard.rotation.z = -Math.PI/2;
+            backEndBoard.rotation.y = Math.PI/4;
+            backEndBoard.position.x = 25
+            backEndBoard.position.z = 32
+            backBendBoard.add( backEndBoard );
+
+
+
+            }
         
         function createLights(){
 
@@ -132,7 +187,7 @@
 
         function render() {
 
-            //moving bottomBall
+            /*//moving bottomBall
              if (snowmanBottom.position.x < 1350){
                 snowmanBottom.position.x += 10
              } else if (snowmanBottom.position.x >= 10) {
@@ -151,7 +206,26 @@
                 snowmanBottom.position.y -= 5    
              } else if (snowmanBottom.position.x < 850 && snowmanBottom.position.y < 0){
                 snowmanBottom.position.y += 5
-            }          
+            }*/ 
+            
+            /*//contact with snowman
+            if(breakSnowman == true){
+
+                if(snowmanBottom.rotation.x < Math.PI/2){
+                    snowmanBottom.rotation.x +=0.04
+                    snowmanBottom.rotation.z -=0.01
+                }   
+                if(snowmanBottom.rotation.x > Math.PI/4 && pivotMiddleBottom.position.y < 110){
+                    pivotMiddleBottom.position.y += 1
+                    pivotMiddleBottom.rotation.x += 0.01
+                }
+                if(snowmanBottom.rotation.x > Math.PI/3 && pivotTopMiddle.position.y < 140){
+                    pivotTopMiddle.position.y += 1
+                }
+
+            }
+            */
+
             // render the scene into viewport using the camera
             renderer.render(scene, camera);
         }
