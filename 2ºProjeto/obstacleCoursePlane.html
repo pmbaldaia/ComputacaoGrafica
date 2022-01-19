@@ -22,7 +22,7 @@
         let camera, scene, renderer;
 
         //moving components
-        let pivotMiddleBottom,pivotTopMiddle, snowmanBottom,snowmanTop,
+        let pivotMiddleBottom,pivotTopMiddle, snowmanBottom,snowmanTop,snowmanMiddle,
         snowboard, frontBendBoard, leftAnkle, leftKnee,
         rightAnkle, rightKnee,
         hipPivot, torsoPivot,
@@ -117,7 +117,7 @@
 
             /*middle Ball*/
             let middleBall = new THREE.SphereGeometry(60, 32, 32)
-            let snowmanMiddle = new THREE.Mesh(middleBall, snow);
+            snowmanMiddle = new THREE.Mesh(middleBall, snow);
             pivotMiddleBottom.add(snowmanMiddle);
 
             /*top snowman pivot*/
@@ -139,12 +139,45 @@
             eyeLeft.position.z = 10
             snowmanTop.add(eyeLeft)
 
-            /*eyes*/
             let eyeRight = new THREE.Mesh(eyeBall, black2Material)
             eyeRight.position.x = 40
             eyeRight.position.y = 10
             eyeRight.position.z = -10
             snowmanTop.add(eyeRight)
+
+            let nose = new THREE.CylinderGeometry(1,5,30)
+            let orangeMaterial = new THREE.MeshLambertMaterial({color: 0xff7f00, side: THREE.DoubleSide})
+            let orangeNose = new THREE.Mesh(nose,orangeMaterial)
+            orangeNose.position.x = 55
+            orangeNose.rotation.z = -Math.PI /2
+            snowmanTop.add(orangeNose)
+
+
+            /*buttons*/
+            let buttonMM = new THREE.Mesh(eyeBall, black2Material)
+            buttonMM.position.x = 60
+            buttonMM.position.y = 5
+            snowmanMiddle.add(buttonMM)
+
+            let buttonMT = new THREE.Mesh(eyeBall, black2Material)
+            buttonMT.position.x = 55
+            buttonMT.position.y = 25
+            snowmanMiddle.add(buttonMT)
+
+            let buttonBT = new THREE.Mesh(eyeBall, black2Material)
+            buttonBT.position.x = 80
+            buttonBT.position.y = 35
+            snowmanBottom.add(buttonBT)
+
+            let buttonBM = new THREE.Mesh(eyeBall, black2Material)
+            buttonBM.position.x = 80
+            buttonBM.position.y = 15
+            snowmanBottom.add(buttonBM)
+
+            let buttonBB = new THREE.Mesh(eyeBall, black2Material)
+            buttonBB.position.x = 80
+            buttonBB.position.y = -5
+            snowmanBottom.add(buttonBB)
         }
         
         function createSnowboarder(){
@@ -444,8 +477,6 @@
                     action = 0
                 }
             }
-
-            //reverse
             if(animation == false){
                 leftAnkle.rotation.y += 0.005
                 rightAnkle.rotation.y += 0.005
@@ -468,10 +499,10 @@
                     action = 0
                 }
             }
-            
             if(animationTrajectory == true){
                 snowboard.position.x += 0.5 * change
                 snowboard.rotation.y -= 0.0005 * change
+                snowboard.rotation.x -= 0.005 * change
                 trajectoryChange += 1
                 if(trajectoryChange == 30){
                     animationTrajectory = false
@@ -482,6 +513,7 @@
             if(animationTrajectory == false){
                 snowboard.position.x -= 0.5 * change
                 snowboard.rotation.y += 0.0005 * change
+                snowboard.rotation.x += 0.005 * change
                 trajectoryChange += 1
                 if(trajectoryChange == 30){
                     animationTrajectory = true
@@ -515,7 +547,6 @@
                     snowboard.rotation.x -= 0.007
                 }
             }
-            
             if( snowboard.position.z == -300 || snowboard.position.z == 300 || snowboard.position.z == 0){
                 goingRight = false
                 goingLeft = false
@@ -541,7 +572,6 @@
                     desceleration -= 0.0015}
                 }
             }
-            
             
             // //UPDATE BBOX HELPER
 			// bbHelper.update();
