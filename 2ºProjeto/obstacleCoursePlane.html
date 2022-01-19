@@ -49,9 +49,9 @@
             createLights();
             
             // just for visualization purposes (NOT required for collisions)
-            snowboard.geometry.computeBoundingBox();
-			bbHelper = new THREE.BoxHelper(snowboard, 0x00FFFF);
-			scene.add(bbHelper); // adds AABB to the scene
+            // snowboard.geometry.computeBoundingBox();
+			// bbHelper = new THREE.BoxHelper(snowboard, 0x00FFFF);
+			// scene.add(bbHelper); // adds AABB to the scene
 
 
             // set the animation function
@@ -101,6 +101,7 @@
             let snow = new THREE.MeshLambertMaterial({color: 0xfffafa, wireframe: false });
             snowmanBottom = new THREE.Mesh(bottomBall, snow);
             snowmanBottom.position.y = 40
+            snowmanBottom.position.x = -600
             scene.add(snowmanBottom);
 
             /*middle snowman pivot*/
@@ -443,8 +444,8 @@
                 }
             }
             
-            //UPDATE BBOX HELPER
-			bbHelper.update();
+            // //UPDATE BBOX HELPER
+			// bbHelper.update();
 
             // render the scene into viewport using the camera
             renderer.render(scene, camera);
@@ -458,7 +459,6 @@
                 breakSnowman = true
 				return true;
 			}
-			
 			return false;
 		}
 
